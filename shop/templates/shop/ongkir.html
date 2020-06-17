@@ -1,0 +1,34 @@
+<!-- 
+{% for i in ongkir.values %}	
+	<h5>{{i}}</h5>
+	{% for j in i.results %}
+		<h4>{{j.costs}}</h4>
+		{% for k in j.costs %}
+			{% for l in k.cost %}
+			<h4> SERVICE = {{k.service}} HARGA = {{l.value}}</h4>
+
+				
+				<h4>ESTIMASI : {{l.etd}}</h4>
+			{% endfor %}
+		{% endfor %}
+	{% endfor %}
+{% endfor %} 
+ -->
+<div class="form-row mb--20">
+	<div id="kecamatan_tujuan" class="form__group col-12">
+		<label for="kecamatan_tujuan" class="form__label form__label--2">Jenis Service</label>
+			<select id="eskpedisi" name="harga_ongkir" class="form__input form__input--2 nice-select">
+				{% for i in ongkir.values %}	
+					{% for j in i.results %}
+						<!-- <h4>{{j.costs}}</h4> -->
+						{% for k in j.costs %}
+							{% for l in k.cost %}
+								<option value="{{l.value}}">{{k.service}} - Harga : {{l.value}}</option>
+							{% endfor %}
+						{% endfor %}
+					{% endfor %}
+				{% endfor %} 
+			</select>
+	</div>
+</div>
+

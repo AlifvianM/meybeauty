@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Detail</title>
+</head>
+<body>
+	<h1>Detail</h1>
+  <small><a href="{% url 'shop-list' %}">Beranda</a></small>
+  <small>{{ message }}</small>
+	<table>
+		<tbody>
+        <tr>
+          <th>Nama</th>
+            <td>{{obj.name}}</td>
+        </tr>
+        <tr>
+          <th>Harga</th>
+            <td>Rp. {{obj.price}}</td>    
+        </tr>
+        <tr>
+          <th>Photo</th>
+            <td><img src="{{obj.photo.url}}" style="width: 150px"></td>
+        </tr>
+        <tr>
+          <th>Aksi</th>
+       <td> <a href="{% url 'shop-addcart' obj.id %}">Keranjang</a> <a href="{% url 'shop-deletecart' obj.id %}">hapus</a>
+          </td>
+        </tr>
+    </tbody>
+	</table>
+</body>
+</html>

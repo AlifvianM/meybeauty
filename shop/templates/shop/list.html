@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Judul</title>
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+	<h1>List</h1>
+	<h3><a href="{% url 'shop-showcart' %}">See your cart</a></h3>
+	{{ message }}	
+	<table>
+		<thead>
+			<th>Nama</th>
+			<th>Harga</th>
+			<th>Foto</th>
+		</thead>
+		<tbody>
+			{% for product in products %}
+				<td>{{product.nama}}</td>
+				<td>{{product.harga}}</td>
+				<td><img src="{{product.hoto.url}}" style="width:150px;"></td>
+				<td><a href="{% url 'shop-detail' product.slug %}">detail</a></td>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<footer>
+		<h1>{{nama_negara}}</h1><br>
+		<h1>Jumlah Positif : {{positif}}</h1>
+		<h1>DATA : {{data}}</h1><br>
+		<h1>PROV : {{provinces}}</h1>
+	</footer>
+
+
+
+	<button id="create">klik</button>
+	<div id="test">
+		
+	</div>
+
+
+</body>
+</html>

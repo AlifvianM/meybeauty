@@ -1,0 +1,13 @@
+<div class="form-row mb--20">
+	<label for="kota_tujuan" class="form__label form__label--2">Kota Tujuan<span class="required">*</span></label>
+		<select id="kota_tujuan" name="kota_tujuan" class="form__input form__input--2 nice-select">
+			{% for s in city.values %}
+						{% for t in s.results %}
+							<option value="{{t.city_id}}">{{t.city_name}}</option>
+						{% endfor %}
+					{% endfor %}
+		</select>
+</div>
+{# <h1>{{prov_id}}</h1> #}
+
+

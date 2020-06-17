@@ -1,0 +1,26 @@
+<div class="form-row mb--20">
+	<div id="kecamatan_tujuan" class="form__group col-12">
+		<label for="kecamatan_tujuan" class="form__label form__label--2">Kecamatan Tujuan</label>
+			<select id="kecamatan_tujuan" name="kecamatan_tujuan" class="form__input form__input--2 nice-select">
+					{% for i in kecamatan.values %}
+							{% for y in i.results %}
+								<option value="{{y.subdistrict_id}}">{{y.subdistrict_name}}</option>
+						{% endfor %}
+					{% endfor %}										
+			</select>
+	</div>
+</div>
+<!-- <h1>LOOP</h1>
+{% for k,v in kecamatan.items %}
+	<h3>{{k}}</h3>
+	<h3>{{v}}</h3>
+{% endfor %} 
+ -->
+
+<!-- <h1>values</h1>
+{% for i in kecamatan.values %}
+	{% for y in i.results %}
+		<h3>{{y.subdistrict_id}} : {{y.subdistrict_name}}</h3>
+	{% endfor %}
+{% endfor %} -->
+<h1>{{prov_id}}</h1>

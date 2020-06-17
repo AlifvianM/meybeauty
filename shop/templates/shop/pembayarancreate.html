@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>pembayaran</title>
+</head>
+<body>
+
+<h1>KODE NOTA {{kode_nota}}</h1>
+	<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{form}}
+		<button type="submit">SUBMIT</button>
+	</form>
+
+</body>
+</html>

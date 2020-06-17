@@ -1,0 +1,8 @@
+<label>Kota Asal</label>
+<select id="kota" class="form-group" name="kota_asal" readonly>
+			{% for s in city.values %}
+				{% for t in s.results %}
+					<option value="{{t.city_id}}">{{t.city_name}}</option>
+				{% endfor %}
+			{% endfor %}
+</select>
