@@ -27,10 +27,10 @@
                                                 </thead>
                                                 <tbody>
 {% for item in items %}
-                            <form class="cart-form" action="{% url 'shop-homecheck' item.id %}" method="POST">
+                            <form class="cart-form" action="{% url 'shop-checkout' item.order.id %}" method="POST">
                                 {% csrf_token %}
                                                     <tr>
-                                                        <td class="product-remove text-left"><a href=""><i class="flaticon flaticon-cross"></i></a></td>
+                                                        <td class="product-remove text-left"><a href="{% url 'shop-deletecart' item.id %}"><i class="flaticon flaticon-cross"></i></a></td>
                                                         <td class="product-thumbnail text-left">
                                                             <img src="{{item.product.foto.url}}" alt="Product Thumnail">
                                                         </td>
@@ -45,10 +45,57 @@
                                                             </span>
                                                         </td>
                                                         <td class="product-quantity">
-                                                            <div class="quantity">
-                                                                <input type="number" class="quantity-input" name="quantity" id="qty-1" value="{{item.quantity}}" min="1">
+                                                            <div class="quantity qtycus{{forloop.counter}}">
+                                                                <input type="number" class="quantity-input" name="quantity{{forloop.counter}}" id="quantity1" value="{{item.quantity}}" min="1">
+                                                            </div>
+                                                            <div id="kek{{forloop.counter}}" style="display: none;">
+                                                                
                                                             </div>
                                                         </td>
+                                                        <td><input type="hidden" name="id" value="{{item.pk}}" id="idx{{forloop.counter}}"></td>
+                                                        <script type="text/javascript">
+                                                            $(document).ready(function(){
+
+
+         // $("#quantity{{forloop.counter}}").click(function(){
+         //    quantity_id{{forloop.counter}} = $("#quantity{{forloop.counter}}").val();
+         //    idv{{forloop.counter}} = $("#idx{{forloop.counter}}").val();
+         //    $("#kek{{forloop.counter}}").load("/orderitemupdate/" + quantity_id{{forloop.counter}} + "/" + idv{{forloop.counter}} );
+         // });
+
+    // $(".quantity").append('<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>');
+
+
+$(".qtycus{{forloop.counter}}").append('<div class="dec{{forloop.counter}} qtybutton{{forloop.counter}} decx qtybuttonx">-</div><div class="inc{{forloop.counter}} qtybutton{{forloop.counter}} incx qtybuttonx">+</div>');
+    idv{{forloop.counter}} = $("#idx{{forloop.counter}}").val();
+
+    $(".qtybutton{{forloop.counter}}").on("click", function () {
+        // alert('gfhjklihugyft {{forloop.counter}}');
+        var $button{{forloop.counter}} = $(this);
+        var oldValue{{forloop.counter}} = $button{{forloop.counter}}.parent().find("input").val();
+        if ($button{{forloop.counter}}.hasClass("inc{{forloop.counter}}")) {
+            var newVal{{forloop.counter}} = parseFloat(oldValue{{forloop.counter}}) + 1;
+            quantity_id{{forloop.counter}} = $("#quantity{{forloop.counter}}").val();
+            idv{{forloop.counter}} = $("#idx{{forloop.counter}}").val();
+            $("#kek{{forloop.counter}}").load("/orderitemupdate/" + newVal{{forloop.counter}} + "/" + idv{{forloop.counter}} );
+        } else {
+            // Don't allow decrementing below zero
+            if (oldValue{{forloop.counter}} > 1) {
+                var newVal{{forloop.counter}} = parseFloat(oldValue{{forloop.counter}}) - 1;
+                 quantity_id{{forloop.counter}} = $("#quantity{{forloop.counter}}").val();
+            idv{{forloop.counter}} = $("#idx{{forloop.counter}}").val();
+            $("#kek{{forloop.counter}}").load("/orderitemupdate/" + newVal{{forloop.counter}} + "/" + idv{{forloop.counter}} );
+            } else {
+                newVal{{forloop.counter}} = 1;
+            }
+        }
+        $button{{forloop.counter}}.parent().find("input").val(newVal{{forloop.counter}});
+    });
+
+        });
+
+
+                                                        </script>
                                                        <!--  <td class="product-total-price">
                                                             <span class="product-price-wrapper">
                                                                 <span class="money">$49.00</span>
@@ -77,6 +124,10 @@
 
                             </form>
                         </div>
+
+
+                        {% for order in orders %}
+                                                        
                         <div class="col-lg-4">
                             <div class="cart-collaterals">
                                 <div class="cart-totals">
@@ -84,22 +135,23 @@
                                     <div class="cart-calculator">
                                         <div class="cart-calculator__item">
                                             <div class="cart-calculator__item--head">
-                                                <span>Subtotal</span>
+                                                <span>Nama</span>
                                             </div>
                                             <div class="cart-calculator__item--value">
-                                                <span>Rp.{{total}}</span>
+                                                <span>{{order.user.first_name}} {{order.user.last_name}}</span>
                                             </div>
                                         </div>
                                         <div class="cart-calculator__item">
                                             <div class="cart-calculator__item--head">
-                                                <span>Shipping</span>
+                                                <span>Kode Nota</span>
                                             </div>
                                             <div class="cart-calculator__item--value">
-                                                <span>Flat rate: $20.00</span>
+                                                <span>{{order.kode_nota}}</span>
                                                 <div class="shipping-calculator-wrap">
-                                                    <a href="#shipping_calculator" class="expand-btn">Calculate Shipping</a>
+                                                    <!-- <a href="#shipping_calculator" class="expand-btn">Calculate Shipping</a> -->
+
                                                     <form id="shipping_calculator" class="form shipping-calculator-form hide-in-default">
-                                                        <div class="form__group">
+                                                        <!-- <div class="form__group">
                                                             <select id="calc_shipping_country" name="calc_shipping_country" class="nice-select form__input--select form__input--2">
                                                                 <option value="">Select a country…</option>
                                                                 <option value="AF">Afghanistan</option>
@@ -184,9 +236,9 @@
                                                                 <option>SHERPUR</option>
                                                                 <option>TANGAIL</option>
                                                             </select>
-                                                        </div>
+                                                        </div> -->
 
-                                                        <div class="form__group mb--10 mb-sm--15">
+                                                        <!-- <div class="form__group mb--10 mb-sm--15">
                                                             <input type="text" name="calc_shipping_city" id="calc_shipping_city" class="form__input form__input--2" placeholder="Town / City">
                                                         </div>
 
@@ -196,18 +248,18 @@
 
                                                         <div class="form__group">
                                                             <input type="submit" value="Update Totals" class="btn-submit btn-submit--small">
-                                                        </div>
+                                                        </div> -->
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="cart-calculator__item order-total">
                                             <div class="cart-calculator__item--head">
-                                                <span>Total</span>
+                                                <span>Email</span>
                                             </div>
                                             <div class="cart-calculator__item--value">
                                                 <span class="product-price-wrapper">
-                                                    <span class="money">$226.00</span>
+                                                    <span class="money">{{order.user.email}}</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -218,9 +270,59 @@
                                 </a>
                             </div>
                         </div>
+
+                        {% endfor %}
+
                     </div>
                 </div>
             </div>
         </div>
         <!-- Main Content Wrapper Start -->
+
+  <script type="text/javascript">
+        // function test(){
+
+        // }
+        $(document).ready(function(){
+          $("#prov").change(function(){
+            prov_id = $("#prov :selected").val();
+                $("#kota").load("/cek_kota/" + prov_id);
+
+          });
+          $("#prov_tujuan").change(function(){
+            prov_tujuan_id = $("#prov_tujuan :selected").val();
+                $("#kota_tujuan").load("/cek_kota_tujuan/" + prov_tujuan_id);
+
+          });
+
+          $("#kota_tujuan").change(function(){
+            kota_tujuan_id = $("#kota_tujuan :selected").val();
+                $("#kecamatan_tujuan").load("/cek_kecamatan_tujuan/" + kota_tujuan_id);
+
+          });
+
+          $("#submit").click(function(){
+            kota_id = $("#kota").val();
+            kecamatan_tujuan_id = $("#kecamatan_tujuan :selected").val();
+            berat = $("#berat").val();
+            jasa_ongkir = $("#ongkir :selected").val();
+                $("#service").load("/cek_ongkir/" + kota_id + "/" + kecamatan_tujuan_id + "/" + berat + "/" +jasa_ongkir);
+          });
+
+         //  $("#ongkir").change(function(){
+            
+            // jasa_ongkir = $("#ongkir :selected").val();
+   //           $("#service").load("/cek_ongkir/" + kota_id + "/" + kecamatan_tujuan_id + "/" + berat + "/" +jasa_ongkir);
+         //  });
+
+         $("#quantity").click(function(){
+            quantity_id = $("#id").value();
+            $("#quantity").load("/orderitemupdate/" + quantity_id);
+         });
+
+
+        });
+        
+    </script>
+       
 {% endblock content %}

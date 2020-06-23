@@ -8,10 +8,11 @@ from datetime import datetime
 from users.models import Profile
 from django.conf import settings
 from django.db.models import Avg, Sum, Count
-from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm
+from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm, OrderItemForm2
 from rajaongkir import RajaOngkirApi
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.http import HttpResponse
 
 import http.client
 import requests
@@ -28,7 +29,7 @@ def cek_ongkir(request,kota_id, kecamatan_tujuan_id, berat, jasa_ongkir):
 	jasa_ongkir = jasa_ongkir
 	conn = http.client.HTTPConnection("pro.rajaongkir.com")
 	url = "https://pro.rajaongkir.com/api/cost"  #origin=501&originType=city&destination=574&destinationType=subdistrict&weight=1700&courier=jne
-	print(url)
+	# print(url)
 	payload = "origin=" + kota_id + "&originType=city&destination=" + kecamatan_tujuan_id + "&destinationType=subdistrict&weight=" + str(berat) + "&courier=" + jasa_ongkir
 	
 	r = requests.post(url,payload, headers = { 'key': settings.API_KEY_SECRET, 'content-type': "application/x-www-form-urlencoded" })
@@ -38,7 +39,7 @@ def cek_ongkir(request,kota_id, kecamatan_tujuan_id, berat, jasa_ongkir):
 
 	# for o in ongkir.values():
 	# 	print(o['results'])
-	print(json.dumps(ongkir, indent=2))
+	# print(json.dumps(ongkir, indent=2))
 
 	context = {
 		'ongkir':ongkir,
@@ -113,12 +114,19 @@ def cek_provinsi(request):
 	template = 'shop/checkout_page.html'
 	return render(request, template, context)
 
+def dashboard(request):
+	pl = Product.objects.all()
+
+	context = {
+		'products' : pl,
+	}
+	return render(request, 'shop/dashboard.html', context)
 
 def product_list(request):
 	pl = Product.objects.all()
-	items = OrderItem.objects.filter(order__user = request.user, order__status_order = False)
-	total = OrderItem.objects.filter(order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
-	count_items = OrderItem.objects.filter(order__status_order = False).aggregate(Count('id'))['id__count'] or 0.00
+	items = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False)
+	total = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
+	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	form = OrderItemForm(request.POST or None)
 
 	if form.is_valid():
@@ -144,50 +152,7 @@ def product_detail(request, slug):
 	return render(request, template, context)
 
 
-# def add_to_cart(request, **kwargs):
-#     # get the user profile
-#     # user_profile = get_object_or_404(Profile, user=request.user)
-#     # filter products by id
-#     product = Product.objects.filter(slug=kwargs.get('slug')).first()
-#     # check if the user already owns this product
-#     # if product in request.user.profile.ebooks.all():
-#     #     messages.info(request, 'You already own this ebook')
-#     #     return redirect(reverse('products:product-list')) 
-#     # create orderItem of the selected product
-#     order_item, status = OrderItem.objects.get_or_create(product=product)
-#     # create order associated with the user
-#     user_order, status = Order.objects.get_or_create(
-#     	# owner=user_profile, 
-#     	is_ordered=False)
-#     print(user_order, status)
-#     user_order.items.add(order_item)
-#     # user_order.created.add(datetime.now)
-#     if status:
-#         # generate a reference code
-#         # user_order.ref_code = generate_order_id()
-#         user_order.save()
-
-#     # show confirmation message and redirect back to the same page
-#     messages.info(request, "item added to cart")
-#     return redirect(reverse('shop-detail', kwargs={'slug':order_item.product.slug}))
-
-
-# def add_to_cart(request, **kwargs):
-#     # user_profile = get_object_or_404(Profile, user = request.user)
-#     product = Product.objects.filter(slug = kwargs['slug']).first()
-#     order_item = OrderItem.objects.get_or_create(product=product)
-#     print(order_item)
-#     user_order = Order.objects.get_or_create(owner=request.user, is_ordered=False)
-#     print(user_order)
-#     # for u in user_order:
-#     #     u.items.add(order_item)
-#     #     u.save()
-#     print(user_order)
-#     user_order.save()
-#     return redirect(reverse('shop-list'))
-
-
-
+@login_required
 def add_to_cart(request,pk):
     product = get_object_or_404(Product, pk=pk)
     cart,created = Order.objects.get_or_create(
@@ -222,10 +187,12 @@ def delete_from_cart(request, **kwargs):
 
 def show_cart(request):
 	items = OrderItem.objects.filter(order__user = request.user, order__status_order = False)
+	order = Order.objects.filter(user = request.user, status_order=False)
 	all_items = OrderItem.objects.filter(order__user = request.user)
-	total = OrderItem.objects.filter(order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
+	total = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
 
 	context = {
+		'orders':order,
 		'items':items,
 		'item_true':all_items,
 		'total':total,
@@ -278,7 +245,7 @@ class OrderUpdateView(UpdateView):
 		r = requests.get(url, headers)
 		provinces = r.json()
 		context['provinces'] = provinces
-		obj = super(OrderUpdateView, self).get_object(queryset = Order.objects.filter(status_order = False))
+		obj = super(OrderUpdateView, self).get_object(queryset = OrderItem.objects.filter(order__status_order = False))
 		if obj.bukti_pembayaran:
 			obj.status_order = True
 			obj.save()
@@ -286,6 +253,35 @@ class OrderUpdateView(UpdateView):
 
 	def get_success_url(self, **kwargs):
 		return reverse('shop-bayar', kwargs={'pk':self.object.id})
+
+
+def orderupdate(request, pk):
+	order = get_object_or_404(Order, pk=pk)
+	form = OrderUpdateForm(request.POST or None, instance = order)
+	url = "https://pro.rajaongkir.com/api/province"
+	headers = { 'key': settings.API_KEY_SECRET }
+	items = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False)
+	sum_price_item = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False).aggregate(Sum('total_harga'))['total_harga__sum'] or 0.00
+	print("order :", order.total_harga)
+	order.harga = sum_price_item
+	order.save()
+
+	r = requests.get(url, headers)
+	provinces = r.json()
+	if form.is_valid():
+		order.total_harga = order.harga + order.harga_ongkir
+		order.save()
+		form.save()
+		return redirect(reverse('shop-bayar', kwargs={'pk':pk}))
+
+	context = {
+		'total':sum_price_item,
+		'form':form,
+		'provinces':provinces,
+		'items':items,
+	}
+	return render(request, 'shop/checkout_page.html', context)
+
 
 
 class OrderBayarUpdateView(UpdateView):
@@ -305,11 +301,33 @@ class OrderBayarUpdateView(UpdateView):
 			print(obj.status_order)
 			obj.save()
 			print(obj.status_order)
+
 		
 		return context
 
+	# def form_valid(self, form):
+	# 	Order.objects.filter(pk = self.id).update(status_order = True)
+	# 	return super().form_valid(form)
+
 	def get_success_url(self, **kwargs):
 		return reverse('shop-list')
+
+
+def OrderBayarUpdate(request, pk):
+	order = get_object_or_404(Order, pk=pk)
+	form = OrderBayarForm(request.POST or None, instance = order)
+	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
+	orders = Order.objects.filter(pk = pk, user = request.user)
+	if form.is_valid():
+		Order.objects.filter(pk = pk).update(status_order = True)
+		return redirect(reverse('shop-list'))
+	context = {
+		'orders':orders,
+		'items':items,
+		'form':form,
+	}		
+	return render(request, 'shop/bayar.html', context)
+
 
 def order_update(request, pk):
 	url = "https://pro.rajaongkir.com/api/province"
@@ -319,7 +337,11 @@ def order_update(request, pk):
 	template = 'shop/form.html'
 	order = get_object_or_404(Order, pk=pk)
 	form = OrderUpdateForm(request.POST or None, instance=order)
+	orderitem = OrderItem.objects.filter(order__pk = pk, status_order = False, order__user = request.user)
+
+
 	if form.is_valid():
+		
 		form.save()
 		return redirect('shop-list')
 
@@ -329,18 +351,40 @@ def order_update(request, pk):
 	}
 	return render(request, template, context)
 
-def orderitem_update(self, pk):
-	ord_item = get_object_or_404(OrderItem, pk=pk)
-	form = OrderItemForm(request.POST or None)
+# def orderitem_update(request, pk):
+# 	ord_item = get_object_or_404(OrderItem, pk=pk)
+# 	form = OrderItemForm(request.POST or None)
 	
-	if form.is_valid():
-		form.save()
+# 	if form.is_valid():
+# 		form.save()
+
+	
+# 	context = {
+# 		"form": form
+# 		}
+# 	return redirect(reverse('shop-checkout', kwargs = {'pk':pk}))
+	# return redirect('/')
+
+
+def orderitem_update(request, order_id):
+			
 	
 	context = {
 		"form": form
 		}
-	return redirect(reverse('shop-checkout', kwargs = {'id':self.pk}))
-	# return redirect('/')
+	return redirect(reverse('shop-checkout', kwargs = {'pk':order_id}))
+
+
+def updateorderitem(request, value, pk_orderitem):
+	orderitem = get_object_or_404(OrderItem, pk = pk_orderitem)
+	OrderItem.objects.filter(order__user = request.user, order__status_order = False, pk = pk_orderitem).update(quantity=value)
+	oi = OrderItem.objects.get(pk = pk_orderitem, order__status_order = False, order__user = request.user)
+	print("quantity : ", oi.quantity)
+	oi.total_harga = oi.quantity * oi.price
+	print('harga :', oi.total_harga)
+	OrderItem.objects.filter(order__user = request.user, order__status_order = False, pk = pk_orderitem).update(total_harga=oi.total_harga)
+
+	return HttpResponse(value)
 
 class OrderItemUpdateView(UpdateView):
 	model = OrderItem
@@ -348,7 +392,14 @@ class OrderItemUpdateView(UpdateView):
 	# queryset = OrderItem.objects.filter(order__status_order = False)
 	# success_url = reverse_lazy('shop-list')
 
+	# def post(self, request, *args, **kwargs):
+	# 	self.object = self.get_object()
+	# 	return super().post(request, *args, **kwargs)
+	def form_valid(self, form):
+		qty = request.POST.getlist('quantity')
+		self.object.order_set.update(quantity =qty )
+
 	def get_success_url(self):
-		return reverse_lazy('shop-checkout', kwargs={'pk':self.object.order.id})
+		return reverse('shop-checkout', kwargs={'pk':object.order.id})
 
 

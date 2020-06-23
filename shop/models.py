@@ -40,6 +40,7 @@ class Order(models.Model):
     kecamatan_tujuan = models.CharField(max_length=255, null=True, blank=True)
     jasa_ongkir = models.CharField(max_length=50, default='jne')
     harga_ongkir = models.FloatField(default=0)
+    total_harga = models.FloatField(default=0)
     bukti_pembayaran = models.ImageField(upload_to='bukti', null=True, blank=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -59,12 +60,15 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete = models.SET_NULL, null=True)
     price = models.FloatField(null=True)
     quantity = models.IntegerField(default=1)
+    total_harga = models.FloatField(default=0)
 
     def __str__(self):
+        # return "ID ORDER ITEM {}".format(self.id)
         return self.product.nama
 
-    # def save(self):
-    #     self.
+    def save(self, *args, **kwargs):
+        self.total_harga = self.quantity * self.price
+        super(OrderItem, self).save(*args, **kwargs)
 
 
 class Pembayaran(models.Model):

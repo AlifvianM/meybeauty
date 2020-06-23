@@ -1,15 +1,172 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Check Out</title>
-</head>
-<body>
-	BUKTI BAYAR
+{% extends "shop/index.html" %}
+
+{% block content %}
+ <div class="breadcrumb-area bg-color ptb--90" data-bg-color="#f6f6f6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center flex-sm-row flex-column">
+                            <h1 class="page-title">Checkout</h1>
+                            <ul class="breadcrumb">
+                                <li><a href="index.html">Home</a></li>
+                                <li class="current"><span>Checkout</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+	
+<div class="main-content-wrapper">
+            <div class="page-content-inner">
+                <div class="container">
+                    <div class="row pt--50 pt-md--40 pt-sm--20">
+                        <div class="col-12">
+                            <!-- User Action Start -->
+                            <div class="user-actions user-actions__coupon">
+                                <div class="message-box mb--30">
+                                    <p><i class="fa fa-exclamation-circle"></i> Have A Coupon? <a class="expand-btn" href="#coupon_info">Click Here To Enter Your Code.</a></p>
+                                </div>
+                                <div id="coupon_info" class="user-actions__form hide-in-default">
+                                    <form action="#" class="form">
+                                        <p>If you have a coupon code, please apply it below.</p>
+                                        <div class="form__group d-sm-flex">
+                                            <input type="text" name="coupon" id="coupon" class="form__input form__input--2 mr--20 mr-xs--0" placeholder="Coupon Code">
+                                            <button type="submit" class="btn btn-small btn-bg-red btn-color-white btn-hover-2">Apply Coupon</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- User Action End -->
+                        </div>
+                    </div> 
+                    <div class="row pb--80 pb-md--60 pb-sm--40">
+                        <!-- Checkout Area Start -->  
+                        <div class="col-lg-6">
+                            <div class="checkout-title mt--10">
+                                <h2>BUKTI BAYAR</h2>
+                            </div>
+                            <div class="checkout-form">
+                                <form action="#" class="form form--checkout" method="POST">
+                                	{% csrf_token %}
+                                	
+                                	{{form}}
+
+									<button class="btn btn-primary" type="submit">LANJUT</button>
+									<!-- {{form}} -->
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
+                            <div class="order-details">
+                                <div class="checkout-title mt--10">
+                                    <h2>Pemesanan Anda</h2>
+                                </div>
+                                <div class="table-content table-responsive mb--30">
+                                    <table class="table order-table order-table-2">
+                                        <thead>
+                                           {% for order in orders %}
+                                            <tr>
+                                                <th>Pemesan</th>
+                                                <th class="text-right">{{order.user.first_name}} {{order.user.last_name}}</th>
+                                            </tr> 
+                                            <tr>
+                                                <th>Kode Nota</th>
+                                                <th class="text-right">{{order.kode_nota}}</th>
+                                            </tr>   
+                                           {% endfor %}
+                                            
+
+                                            <tr>
+                                                <th>Product</th>
+                                                <th class="text-right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in items %}
+                                               <tr>
+                                                <th>{{item.product.nama}}
+                                                    <strong><span>&#10005;</span>{{item.quantity}}</strong>
+                                                </th>
+                                                <td class="text-right">Rp.{{item.total_harga}}</td>
+                                            </tr>
+                                           {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            {% for order in orders %}
+                                            <tr class="cart-subtotal">
+                                                <th>Subtotal</th>
+                                                <td class="text-right">Rp.{{order.harga}}</td>
+                                            </tr>
+                                            <tr class="cart-subtotal">
+                                                <th>Harga Ongkir</th>
+                                                <td class="text-right">Rp.{{order.harga_ongkir}}</td>
+                                            </tr>
+                                            <tr class="order-total">
+                                                <th>Total</th>
+                                                <td class="text-right"><span class="order-total-ammount">Rp.{{order.total_harga}}</span></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="checkout-payment">
+                                    <form action="#" class="payment-form">
+                                        <div class="payment-group mb--10">
+                                            <div class="payment-radio">
+                                                <input type="radio" value="bank" name="payment-method" id="bank" checked>
+                                                <label class="payment-label" for="cheque">Direct Bank Transfer</label>
+                                            </div>
+                                            <div class="payment-info" data-method="bank">
+                                                <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
+                                            </div>
+                                        </div>
+                                        <div class="payment-group mb--10">
+                                            <div class="payment-radio">
+                                                <input type="radio" value="cheque" name="payment-method" id="cheque">
+                                                <label class="payment-label" for="cheque">
+                                                    cheque payments
+                                                </label>
+                                            </div>
+                                            <div class="payment-info cheque hide-in-default" data-method="cheque">
+                                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
+                                            </div>
+                                        </div>
+                                        <div class="payment-group mb--10">
+                                            <div class="payment-radio">
+                                                <input type="radio" value="cash" name="payment-method" id="cash">
+                                                <label class="payment-label" for="cash">
+                                                    CASH ON DELIVERY
+                                                </label>
+                                            </div>
+                                            <div class="payment-info cash hide-in-default" data-method="cash">
+                                                <p>Pay with cash upon delivery.</p>
+                                            </div>
+                                        </div>
+                                        <div class="payment-group mt--20">
+                                            <p class="mb--15">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
+                                            <button type="submit" class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2">Place Order</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Checkout Area End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+{% endblock content %}
+
 	<form method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{form}}
 
 		<button type="submit"> SUBMIT </button>
 	</form>
-</body>
-</html>

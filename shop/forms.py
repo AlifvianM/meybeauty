@@ -1,5 +1,6 @@
 from django import forms
 from .models import Product, OrderItem, Order, Pembayaran
+from .forms import OrderItem as OIModel
 
 
 class OrderItemForm(forms.ModelForm):
@@ -10,14 +11,14 @@ class OrderItemForm(forms.ModelForm):
                         'type':'number'
 
                     }
-                ), initial='{{item.quantity}}'
+                )
         )
 
     class Meta:
-        model = OrderItem
-        fields = (
+        model = OIModel
+        fields = [
             'quantity',
-            )
+            ]
     
 
 
@@ -52,13 +53,30 @@ class OrderUpdateForm(forms.ModelForm):
         	)
 
 class OrderBayarForm(forms.ModelForm):
+    # status_order = forms.BooleanField(
+    #         widget=forms.CheckboxInput(
+    #                 attrs = {
+    #                     'class':'form-control',
+    #                     'type':'hidden',
+    #                     'value':'False',
+    #                 }
+    #             )
+    #     )
+
     class Meta:
         model = Order
         fields = (
+            # 'status_order',
             'bukti_pembayaran',
             )
         
-    
+class OrderItemForm2(forms.ModelForm):
+        class Meta:
+            model = OrderItem
+            fields = (
+                'order',
+                )
+            
 
 
 

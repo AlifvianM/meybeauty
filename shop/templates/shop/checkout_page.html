@@ -142,25 +142,23 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th>Aliquam lobortis est 
-                                                    <strong><span>&#10005;</span>1</strong>
-                                                </th>
-                                                <td class="text-right">$80.00</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Auctor gravida enim 
-                                                    <strong><span>&#10005;</span>1</strong>
-                                                </th>
-                                                <td class="text-right">$60.00</td>
-                                            </tr>
+
+                                                {% for item in items %}
+                                                    <tr>
+                                                        <th>{{item.product.nama}} 
+                                                            <strong><span>&#10005;</span>{{item.quantity}}</strong>
+                                                        </th>
+                                                        <td class="text-right">Rp.{{item.price}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            
                                         </tbody>
                                         <tfoot>
                                             <tr class="cart-subtotal">
                                                 <th>Subtotal</th>
-                                                <td class="text-right">$56.00</td>
+                                                <td class="text-right">Rp.{{total}}</td>
                                             </tr>
-                                            <tr class="shipping">
+                                           <!--  <tr class="shipping">
                                                 <th>Shipping</th>
                                                 <td class="text-right">
                                                     <span>Flat Rate; $20.00</span>
@@ -169,12 +167,12 @@
                                             <tr class="order-total">
                                                 <th>Order Total</th>
                                                 <td class="text-right"><span class="order-total-ammount">$56.00</span></td>
-                                            </tr>
+                                            </tr> -->
                                         </tfoot>
                                     </table>
                                 </div>
                                 <div class="checkout-payment">
-                                    <form action="#" class="payment-form">
+                                    <!-- <form action="#" class="payment-form">
                                         <div class="payment-group mb--10">
                                             <div class="payment-radio">
                                                 <input type="radio" value="bank" name="payment-method" id="bank" checked>
@@ -210,7 +208,7 @@
                                             <p class="mb--15">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
                                             <button type="submit" class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2">Place Order</button>
                                         </div>
-                                    </form>
+                                    </form> -->
                                 </div>
                             </div>
                         </div>
