@@ -24,10 +24,10 @@
                                             }'>
                                                 <figure class="product-gallery__image zoom">
                                                     <img src="{{obj.foto.url}} " alt="Product">
-                                                    <div class="product-gallery__actions">
+                                                    <!-- <div class="product-gallery__actions">
                                                         <button class="action-btn btn-zoom-popup"><i class="fa fa-eye"></i></button>
                                                         <a href="https://www.youtube.com/watch?v=Rp19QD2XIGM" class="action-btn video-popup"><i class="fa fa-play"></i></a>
-                                                    </div>
+                                                    </div> -->
                                                 </figure>
                                                 <figure class="product-gallery__image zoom">
                                                     <img src="{% static "shop/assets/img/products/prod-32.jpg" %} " alt="Product">
@@ -123,13 +123,14 @@
                                     <a href="#" class="next"><i class="fa fa-angle-double-right"></i></a>
                                 </div>
 -->
-                                <div class="product-rating d-flex mb--20">
+                                <!-- <div class="product-rating d-flex mb--20">
                                     <div class="star-rating star-four">
                                         <span>Rated <strong class="rating">5.00</strong> out of 5</span>
                                     </div>
-                                </div>
+                                </div> -->
 <!--                                <h3 class="product-title mb--20">Black Blazer</h3>-->
-                                <p class="product-short-description mb--20">Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci. Aliquam egestas libero ac turpis pharetra, in vehicula lacus scelerisque. Vestibulum ut sem laoreet, feugiat tellus at, hendrerit arcu.</p>
+                                <strong>{{obj.nama}}</strong>
+                                <p class="product mb--20">{{obj.desc}}</p>
                                 <div class="product-price-wrapper mb--25">
                                     <span class="money">Rp.{{obj.harga}}</span>
                                     <!-- <span class="price-separator">-</span> -->
@@ -173,19 +174,19 @@
                                     
                                     <a href="{% url 'shop-addcart' obj.id %}" class="btn btn-small btn-bg-red btn-color-white btn-hover-2">Add To Cart</a>
                                 </div>  
-                                <div class="product-footer-meta">
+                               <!--  <div class="product-footer-meta">
                                     <p><span>Category:</span> 
                                         <a href="shop.html">Full Sweater</a>,
                                         <a href="shop.html">SweatShirt</a>,
                                         <a href="shop.html">Jacket</a>,
                                         <a href="shop.html">Blazer</a>
                                     </p>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="row justify-content-center mb--80">
+                    <!-- <div class="row justify-content-center mb--80">
                         <div class="col-12">
                             <div class="product-data-tab tab-style-3">
                                 <div class="nav nav-tabs product-data-tab__head mb--35 mb-sm--25" id="product-tab" role="tablist">
@@ -202,9 +203,8 @@
                                 <div class="tab-content product-data-tab__content" id="product-tabContent">
                                     <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
                                         <div class="product-description">
-                                            <p>Lorem ipsum dolor sit amet, consec do eiusmod tincididunt ut labore et dolore magna aliqua. Ut enim ad minim veniaLo ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla paExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. iatis unde omnis iste natus error sit voluptatem accusantium </p>
 
-                                            <p>Lorem ipsum dolor sit amet, consec do eiusmod tincididunt ut labore et dolore magna aliqua. Ut enim ad minim veniaLo ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                                            <p>{{obj.desc}}</p>
                                             
                                             <h5 class="product-description__heading">Characteristics :</h5>
                                             <ul>
@@ -312,7 +312,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <div class="col-12">
                             <div class="zakas-element-carousel nav-vertical-center" data-slick-options='{

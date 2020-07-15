@@ -1,0 +1,15 @@
+{% autoescape off %}
+Hello, {{ user.username }}!
+
+Thanks for visiting DRWSkincare Banyuwangi.
+Well, you are one step closer with DRWSkincare Banyuwangi and me here.
+Please click on the link bellow to complete your registration.
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+
+By the way, it's nice to meet you too!
+
+Founder of DRWSkincare Banyuwangi
+
+{% endautoescape %}

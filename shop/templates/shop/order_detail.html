@@ -1,0 +1,114 @@
+{% extends "shop/index.html" %}
+
+{% block content %}
+<div class="main-content-wrapper">
+            <div class="page-content-inner">
+                <div class="container">
+                    <div class="row pt--50 pt-md--40 pt-sm--20">
+                        <div class="col-12">
+                            <!-- User Action Start -->
+                            <div class="user-actions user-actions__coupon">
+                                
+                                
+                            </div>
+                            <!-- User Action End -->
+                        </div>
+                    </div> 
+                    <div class="row pb--80 pb-md--60 pb-sm--40">
+                        <!-- Checkout Area Start -->  
+                        <div class="col-lg-6">
+                            <div class="checkout-title mt--10">
+                                <h2>Order Detail</h2>
+                            </div>
+                            <div class="checkout-form">
+                                <form action="#" class="form form--checkout" method="POST">
+                                	{% csrf_token %}
+                                    <table style="width:75%">
+										<tr>
+											<th>Nota</th>
+
+											<td>{{orders.kode_nota}}</td>
+										</tr>
+										<tr>
+											<th>Nama</th>
+											<td>{{orders.user.first_name}} {{orders.user.last_name}}</td>
+										</tr>
+										<tr>
+											<th>Status Order</th>
+											<td>{{orders.status_order}}</td>
+										</tr>
+                                        <tr>
+                                            <th>Status Bayar</th>
+                                            <td>{{orders.status_bayar}}</td>
+                                        </tr>
+										<tr>
+											<th>Jasa Ongkir</th>
+											<td>{{orders.jasa_ongkir}}</td>
+										</tr>
+                                        {% if orders.status_order == True %}
+                                            <tr class="cart-subtotal">
+                                                <th>Resi</th>
+                                                <!-- <td class="text-right">{{orders.resi}}</td> -->
+                                                <td>{{orders.resi}}</td>
+
+                                            </tr>
+                                            {% endif %}
+									</table>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
+                            <div class="order-details">
+                                <div class="checkout-title mt--10">
+                                    <h2>Your Order</h2>
+                                </div>
+                                <div class="table-content table-responsive mb--30">
+                                    <table class="table order-table order-table-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th class="text-right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                                {% for item in items %}
+                                                    <tr>
+                                                        <th>{{item.product.nama}} 
+                                                            <strong><span>&#10005;</span>{{item.quantity}}</strong>
+                                                        </th>
+                                                        <td class="text-right">Rp.{{item.total_harga}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="cart-subtotal">
+                                                <th>Harga Ongkir</th>
+                                                <td class="text-right">Rp.{{orders.harga_ongkir}}</td>
+                                            </tr>
+                                            <tr class="cart-subtotal">
+                                                <th>Total</th>
+                                                <td class="text-right">Rp.{{total}}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    {% if orders.status_order == False %}
+	                                    <form method="POST" action="{% url 'shop-bayar' orders.pk %}">
+	                                    	{% csrf_token %}
+		                                    <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                	
+	                                    </form>
+                                    {% endif %}
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <!-- Checkout Area End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock content %}

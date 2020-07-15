@@ -8,7 +8,7 @@ from datetime import datetime
 from users.models import Profile
 from django.conf import settings
 from django.db.models import Avg, Sum, Count
-from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm, OrderItemForm2
+from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm, OrderItemForm2, MemberForm
 from rajaongkir import RajaOngkirApi
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -18,6 +18,13 @@ import http.client
 import requests
 import datetime
 import json
+
+from django.core.paginator import Paginator
+
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+
+
 
 # Create your views here.
 
@@ -122,6 +129,7 @@ def dashboard(request):
 	}
 	return render(request, 'shop/dashboard.html', context)
 
+@login_required
 def product_list(request):
 	pl = Product.objects.all()
 	items = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False)
@@ -145,8 +153,10 @@ def product_list(request):
 
 def product_detail(request, slug):
 	obj = get_object_or_404(Product, slug=slug)
+	count_items = OrderItem.objects.filter(order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	context = {
-		'obj':obj
+		'obj':obj,
+		'count_items':count_items,
 	}
 	template = 'shop/product-details.html'
 	return render(request, template, context)
@@ -157,7 +167,7 @@ def add_to_cart(request,pk):
     product = get_object_or_404(Product, pk=pk)
     cart,created = Order.objects.get_or_create(
         user=request.user,
-         status_order = False,
+        status_order = False,
          )
     cart.kode_nota = str(datetime.datetime.now())
     print('cart :', cart, 'kode nota', cart.kode_nota)
@@ -172,7 +182,7 @@ def add_to_cart(request,pk):
 	    print(orderitem)
 	    cart.save()
     messages.success(request, "Cart updated!")
-    return redirect('shop-list')
+    return redirect('shop-showcart')
 
 
 # 2020-06-06 05:24:29.900785
@@ -183,19 +193,20 @@ def delete_from_cart(request, **kwargs):
     if item_to_delete.exists():
         item_to_delete[0].delete()
         messages.info(request, "Item has been deleted")
-    return redirect('shop-list')
+    return redirect('shop-showcart')
 
 def show_cart(request):
 	items = OrderItem.objects.filter(order__user = request.user, order__status_order = False)
 	order = Order.objects.filter(user = request.user, status_order=False)
 	all_items = OrderItem.objects.filter(order__user = request.user)
 	total = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
-
+	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	context = {
 		'orders':order,
 		'items':items,
 		'item_true':all_items,
 		'total':total,
+		'count_items':count_items,
 	}
 	return render(request, 'shop/cart.html', context)
 
@@ -208,7 +219,7 @@ class OrderItemDeleteView(DeleteView):
         return self.post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('shop-list')
+        return reverse('shop-showcart')
 
 # def pembayarancreate(request, kode_nota):
 # 	kode_nota = get_object_or_404(Order, kode_nota=kode_nota)
@@ -270,9 +281,10 @@ def orderupdate(request, pk):
 	provinces = r.json()
 	if form.is_valid():
 		order.total_harga = order.harga + order.harga_ongkir
+		# order.status_order = True
 		order.save()
 		form.save()
-		return redirect(reverse('shop-bayar', kwargs={'pk':pk}))
+		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
 
 	context = {
 		'total':sum_price_item,
@@ -311,23 +323,6 @@ class OrderBayarUpdateView(UpdateView):
 
 	def get_success_url(self, **kwargs):
 		return reverse('shop-list')
-
-
-def OrderBayarUpdate(request, pk):
-	order = get_object_or_404(Order, pk=pk)
-	form = OrderBayarForm(request.POST or None, instance = order)
-	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
-	orders = Order.objects.filter(pk = pk, user = request.user)
-	if form.is_valid():
-		Order.objects.filter(pk = pk).update(status_order = True)
-		return redirect(reverse('shop-list'))
-	context = {
-		'orders':orders,
-		'items':items,
-		'form':form,
-	}		
-	return render(request, 'shop/bayar.html', context)
-
 
 def order_update(request, pk):
 	url = "https://pro.rajaongkir.com/api/province"
@@ -401,5 +396,102 @@ class OrderItemUpdateView(UpdateView):
 
 	def get_success_url(self):
 		return reverse('shop-checkout', kwargs={'pk':object.order.id})
+
+def transaction(request):
+	order = Order.objects.filter( user = request.user).order_by('-created_at')
+	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
+	context = {
+		'orders':order,
+		'count_items':count_items
+	}
+	return render(request, 'shop/transaction.html', context)
+
+
+# def transaction(request):
+# 	order = Order.objects.filter(user = request.user, status_order = ).order_by('-created_at')
+
+
+
+# def OrderBayarUpdate(request, pk):
+# 	order = get_object_or_404(Order, pk=pk)
+# 	form = OrderBayarForm(request.POST or None, instance = order)
+# 	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
+# 	orders = Order.objects.filter(pk = pk, user = request.user)
+# 	if form.is_valid():
+# 		Order.objects.filter(pk = pk).update(status_order = True)
+# 		return redirect(reverse('shop-list'))
+# 	context = {
+# 		'orders':orders,
+# 		'items':items,
+# 		'form':form,
+# 	}		
+# 	return render(request, 'shop/bayar.html', context)
+
+def OrderBayarUpdate(request, pk):
+	order = get_object_or_404(Order, pk=pk)
+	form = OrderBayarForm(request.POST, request.FILES, instance = order)
+	form.kode_nota = order.kode_nota
+	print(form.kode_nota)
+	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
+	orders = Order.objects.filter(pk = pk, user = request.user)
+	if form.is_valid():
+		form.save()
+		Order.objects.filter(pk = pk).update(status_bayar = 'SUDAH', status_order = True)
+		print("FOTO :",order.bukti_pembayaran)
+		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
+	context = {
+		'orders':orders,
+		'items':items,
+		'form':form,
+	}		
+	return render(request, 'shop/bayar.html', context)
+
+def orderdetail(request, pk):
+	order = get_object_or_404(Order, pk=pk)
+	orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
+	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
+	sum_price = order.harga + order.harga_ongkir 
+	context = {
+		'orders':order,
+		'items':orderitem,
+		'count_items':count_items,
+		'total':sum_price
+	}
+	return render(request, 'shop/order_detail.html', context)
+
+@login_required
+def show_product(request):
+	product = Product.objects.all().order_by('-created_at')
+	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
+	paginator = Paginator(product, 1)
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+	context = {
+		'products':product,
+		'count_items':count_items,
+		'page_obj':page_obj
+	}
+	return render(request, 'shop/products.html', context)
+
+def member(request):
+	if request.POST:
+		form = MemberForm(request.POST)
+		if form.is_valid():
+			user = form.cleaned_data.get('nama')
+			to_email = form.cleaned_data.get('email')
+			message = render_to_string('shop/member_email.html', {
+                'user': user,
+                # 'domain': current_site.domain,
+                # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                # 'token':account_activation_token.make_token(user),
+                })
+			mail_subject = 'Thanks For Being Member Of DRWSkincare Banyuwangi.'
+			email = EmailMessage(mail_subject, message, to=[to_email])
+			email.send()
+			return redirect(reverse('shop-list'))
+	else:
+		form = MemberForm()
+	return render(request, 'shop/member.html', {'form':form})
+
 
 

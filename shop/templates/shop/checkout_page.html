@@ -104,8 +104,8 @@
 
 									<div class="form-row mb--20">
                                         <div class="form__group col-12">
-                                            <label for="berat" class="form__label form__label--2">Berat<span class="required">*</span></label>
-                                            <input type="number" name="Berat" value="1000" id="berat" class="form__input form__input--2">
+                                            <!-- <label for="berat" class="form__label form__label--2">Berat<span class="required">*</span></label> -->
+                                            <input type="hidden" name="Berat" value="1000" id="berat" class="form__input form__input--2">
                                         </div>
                                     </div>
 									
@@ -148,7 +148,7 @@
                                                         <th>{{item.product.nama}} 
                                                             <strong><span>&#10005;</span>{{item.quantity}}</strong>
                                                         </th>
-                                                        <td class="text-right">Rp.{{item.price}}</td>
+                                                        <td class="text-right">Rp.{{item.total_harga}}</td>
                                                     </tr>
                                                 {% endfor %}
                                             

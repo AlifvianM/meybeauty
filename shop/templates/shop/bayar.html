@@ -21,41 +21,29 @@
 <div class="main-content-wrapper">
             <div class="page-content-inner">
                 <div class="container">
-                    <div class="row pt--50 pt-md--40 pt-sm--20">
-                        <div class="col-12">
-                            <!-- User Action Start -->
-                            <div class="user-actions user-actions__coupon">
-                                <div class="message-box mb--30">
-                                    <p><i class="fa fa-exclamation-circle"></i> Have A Coupon? <a class="expand-btn" href="#coupon_info">Click Here To Enter Your Code.</a></p>
-                                </div>
-                                <div id="coupon_info" class="user-actions__form hide-in-default">
-                                    <form action="#" class="form">
-                                        <p>If you have a coupon code, please apply it below.</p>
-                                        <div class="form__group d-sm-flex">
-                                            <input type="text" name="coupon" id="coupon" class="form__input form__input--2 mr--20 mr-xs--0" placeholder="Coupon Code">
-                                            <button type="submit" class="btn btn-small btn-bg-red btn-color-white btn-hover-2">Apply Coupon</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <!-- User Action End -->
-                        </div>
-                    </div> 
+                    
                     <div class="row pb--80 pb-md--60 pb-sm--40">
                         <!-- Checkout Area Start -->  
                         <div class="col-lg-6">
                             <div class="checkout-title mt--10">
-                                <h2>BUKTI BAYAR</h2>
+                                <h2>BUKTI PEMBAYARAN</h2>
                             </div>
                             <div class="checkout-form">
-                                <form action="#" class="form form--checkout" method="POST">
+                                <!-- <form class="form form--checkout" method="POST" enctype="multipart/form-data">
                                 	{% csrf_token %}
                                 	
                                 	{{form}}
 
 									<button class="btn btn-primary" type="submit">LANJUT</button>
-									<!-- {{form}} -->
-                                </form>
+                                </form> -->
+                                <form method="POST" enctype="multipart/form-data"> 
+                                    {% csrf_token %} 
+                                    <div class="form-group">
+                                    {{ form.as_p }} 
+                                        
+                                    </div>
+                                    <input class="btn btn-info" type="submit" value="Submit"> 
+                                </form> 
                             </div>
                         </div>
                         <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
@@ -112,43 +100,16 @@
                                     </table>
                                 </div>
                                 <div class="checkout-payment">
-                                    <form action="#" class="payment-form">
+                                    
                                         <div class="payment-group mb--10">
                                             <div class="payment-radio">
                                                 <input type="radio" value="bank" name="payment-method" id="bank" checked>
-                                                <label class="payment-label" for="cheque">Direct Bank Transfer</label>
+                                                <label class="payment-label" for="bank">Direct Bank Transfer</label>
                                             </div>
                                             <div class="payment-info" data-method="bank">
                                                 <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
                                             </div>
                                         </div>
-                                        <div class="payment-group mb--10">
-                                            <div class="payment-radio">
-                                                <input type="radio" value="cheque" name="payment-method" id="cheque">
-                                                <label class="payment-label" for="cheque">
-                                                    cheque payments
-                                                </label>
-                                            </div>
-                                            <div class="payment-info cheque hide-in-default" data-method="cheque">
-                                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                                            </div>
-                                        </div>
-                                        <div class="payment-group mb--10">
-                                            <div class="payment-radio">
-                                                <input type="radio" value="cash" name="payment-method" id="cash">
-                                                <label class="payment-label" for="cash">
-                                                    CASH ON DELIVERY
-                                                </label>
-                                            </div>
-                                            <div class="payment-info cash hide-in-default" data-method="cash">
-                                                <p>Pay with cash upon delivery.</p>
-                                            </div>
-                                        </div>
-                                        <div class="payment-group mt--20">
-                                            <p class="mb--15">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
-                                            <button type="submit" class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2">Place Order</button>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>

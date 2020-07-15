@@ -303,7 +303,7 @@ a, a:hover, a:focus, a:active, button, button:focus, input, select, textarea, .s
   width: 100%;
   z-index: 999;
   margin: 0;
-  background-color: #ffffff;
+  background-color: #ffcccc;
   -webkit-animation: fadeInDown 0.8s ease-in-out;
   -moz-animation: fadeInDown 0.8s ease-in-out;
   -ms-animation: fadeInDown 0.8s ease-in-out;

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from datetime import datetime
+from users.models import Profile
 
 class Product(models.Model):
     nama = models.CharField(max_length=120)
@@ -9,6 +10,7 @@ class Product(models.Model):
     foto = models.ImageField(upload_to='documents/', null=True)
     slug  = models.SlugField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    desc = models.TextField(null=True, blank=True)
     # created = models.DateTimeField(auto_now_add=True)
     # category
 
@@ -41,17 +43,19 @@ class Order(models.Model):
     jasa_ongkir = models.CharField(max_length=50, default='jne')
     harga_ongkir = models.FloatField(default=0)
     total_harga = models.FloatField(default=0)
-    bukti_pembayaran = models.ImageField(upload_to='bukti', null=True, blank=True)
+    bukti_pembayaran = models.ImageField(upload_to='bukti/', null=True, blank=True)
+    status_bayar = models.CharField(max_length=50, choices=STATUS, default='BELUM')
+    resi = models.CharField(max_length=255, null=True, blank=True, default='Menunggu nomor resi')
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
     def __str__(self):
         return "kode_nota {}".format(self.kode_nota)
-    def save(self, *args, **kwargs):
-        if self.bukti_pembayaran:
-            self.status_order = True
-        super(Order, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.bukti_pembayaran:
+    #         self.status_order = True
+    #     super(Order, self).save(*args, **kwargs)
 
 class OrderItem(models.Model):
     # kode_nota
@@ -72,7 +76,7 @@ class OrderItem(models.Model):
 
 
 class Pembayaran(models.Model):
-    bukti_pembayaran = models.ImageField(upload_to='bukti')
+    bukti_pembayaran = models.ImageField(upload_to='bukti/')
     kode_nota = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     # provinsi_asal = models.CharField(max_length=255, default='11')
     # # kota_asal = models.CharField(max_length=255, default='42')
@@ -86,8 +90,10 @@ class Pembayaran(models.Model):
     def __str__(self):
         return "Nota {}. ID {}.".format(self.kode_nota.kode_nota, self.id)
 
-    
+class Member(models.Model):
+    nama            = models.CharField(max_length=50)
+    email           = models.EmailField(max_length=254)
+    nomor_telepon   = models.CharField(max_length=50)
+    terms           = models.BooleanField(default=False)
 
 
-
-   
