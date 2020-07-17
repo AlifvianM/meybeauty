@@ -24,7 +24,9 @@ from .views import (
 	transaction,
 	orderdetail,
 	show_product,
+	show_product_home,
 	member,
+	search,
 	)
 
 from django.conf.urls.static import static
@@ -33,6 +35,7 @@ from django.conf import settings
 
 
 urlpatterns= [
+	path('search', search, name='shop-search'),
 	path('member', member, name='shop-member'),
 	path('orderdetail/<int:pk>', orderdetail, name='shop-orderdetail'),
 	path('transaction/', transaction, name = 'shop-transaction'),
@@ -53,5 +56,6 @@ urlpatterns= [
 	path('detail/<slug:slug>', product_detail, name='shop-detail'),
 	path('dashboard', product_list, name = 'shop-list'),
 	path('products', show_product, name = 'show_product'),
+	path('product', show_product_home, name = 'show_product_home'),
 	path('', dashboard, name = 'shop-dashboard'),
 ]

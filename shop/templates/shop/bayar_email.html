@@ -1,0 +1,16 @@
+{% autoescape off %}
+Hello, {{ user.username }}!
+Pembayaran anda dengan kode {{order.kode_nota}} telah berhasil. Admin akan memverifikasi pembayaran anda. Mohon Tunggu 1X24 Jam untuk Nomor Resi pengiriman anda.
+Detail Barang:
+{% for oi in orderitem %}
+{{oi.product.nama}} X {{oi.quantity}} = {{oi.price}}
+{% endfor %}
+ongkir = {{order.harga_ongkir}}
+total = {{order.total_harga}}
+
+
+Thank You
+Founder of DRWSkincare Banyuwangi
+
+Mey
+{% endautoescape %}

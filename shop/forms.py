@@ -19,8 +19,6 @@ class OrderItemForm(forms.ModelForm):
         fields = [
             'quantity',
             ]
-    
-
 
 class PembayaranForm(forms.ModelForm):
 	kode_nota = forms.ModelChoiceField(queryset=Order.objects.all(), 
@@ -30,11 +28,6 @@ class PembayaranForm(forms.ModelForm):
                     }
                 ), label='Jenis Cetak'   
         )
-
-	# def __init__(self, *args, **kwargs):
- #        super().__init__(*args, **kwargs)
- #        self.fields['foo_select'].queryset = ...
-
 	class Meta:
 		model = Pembayaran
 		fields = '__all__'
@@ -63,7 +56,7 @@ class OrderBayarForm(forms.ModelForm):
     bukti_pembayaran = forms.ImageField(
             widget= forms.FileInput(
                     attrs={
-                        'class':'form-control',
+                        'class':'form__input form__input--2',
                     }
                 )
         )
@@ -88,28 +81,28 @@ class MemberForm(forms.ModelForm):
     nama = forms.CharField(
             widget=forms.TextInput(
                     attrs={
-                        'class':'form-control',
+                        'class':'form__input form__input--2',
                     }
                 )
         )
     email = forms.EmailField(
             widget=forms.EmailInput(
                     attrs={
-                        'class':'form-control',
+                        'class':'form__input form__input--2',
                     }
                 )
         )
     nomor_telepon = forms.CharField(
             widget=forms.NumberInput(
                     attrs={
-                        'class':'form-control',
+                        'class':'form__input form__input--2',
                     }
                 ), label='Nomor HP / Whatsapp'
         )
     terms = forms.BooleanField(
             widget=forms.CheckboxInput(
                     attrs={
-                        'class':'form-control',
+                        'class':'form__input form__input--2',
                     }
                 )
         )

@@ -1,0 +1,16 @@
+{% autoescape off %}
+Hello, {{ user.username }}!
+Pemesanan anda dengan kode {{order.kode_nota}} telah kami proses. Segera lakukan proses pembayaran agar pemesanan anda dapat kami kirim secepatnya.
+Detail Barang:
+{% for oi in orderitem %}
+{{oi.product.nama}} X {{oi.quantity}} = {{oi.price}}
+{% endfor %}
+ongkir = {{order.harga_ongkir}}
+total = {{order.total_harga}}
+
+
+Thank You
+Founder of DRWSkincare Banyuwangi
+
+Mey
+{% endautoescape %}

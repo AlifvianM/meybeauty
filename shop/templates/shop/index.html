@@ -71,6 +71,28 @@
                                                 <i class="flaticon flaticon-shopping-cart"></i>
                                         <sup class="mini-cart-count">{{count_items}}</sup>
                                             </a>
+                                            {% if count_items == 0 %}
+                                                
+                                            <ul class="megamenu">
+                                                <li>
+                                                    <a class="megamenu-title" href="{% url 'shop-showcart' %}">
+                                                        <span class="mm-text">Order</span>
+                                                    </a>
+                                                    <ul>
+                                                        <!-- <li>
+                                                            <a href="{% url 'shop-showcart' %}">
+                                                                <span class="mm-text">Order Detail</span>
+                                                            </a>
+                                                        </li> -->
+                                                        <li>
+                                                            <a href="{% url 'shop-transaction' %} ">
+                                                                <span class="mm-text">Transaction</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            {% else %}
                                             <ul class="megamenu">
                                                 <li>
                                                     <a class="megamenu-title" href="{% url 'shop-showcart' %}">
@@ -87,25 +109,12 @@
                                                                 <span class="mm-text">Transaction</span>
                                                             </a>
                                                         </li>
-                                                        <!-- <li>
-                                                            <a href="shop-right-sidebar.html">
-                                                                <span class="mm-text">Right Sidebar</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-three-columns.html">
-                                                                <span class="mm-text">Three Columns</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-four-columns.html">
-                                                                <span class="mm-text">Four Columns</span>
-                                                            </a>
-                                                        </li> -->
                                                     </ul>
                                                 </li>
-                                                
                                             </ul>
+                                            {% endif %}
+                                            
+
                                         </li>
                                         <li class="mainmenu__item menu-item-has-children">
                                             <a href="{% url 'show_product' %}" class="mainmenu__link">
@@ -129,7 +138,7 @@
                                     </a>
                                     <ul class="user-info-menu">
                                         <li>
-                                            <a href="my-account.html">{{user.username}}</a>
+                                            <a href=""><i class="flaticon flaticon-user"></i><b> {{user.username}}</b></a>
                                         </li>
                                         <li>
                                             <a href="{% url 'shop-showcart' %}">Shopping Cart</a>
@@ -139,11 +148,11 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <!-- <li class="header-toolbar__item">
+                                <li class="header-toolbar__item">
                                     <a href="#searchForm" class="header-toolbar__btn toolbar-btn">
                                         <i class="flaticon flaticon-search"></i>
                                     </a>
-                                </li> -->
+                                </li>
                                 <li class="header-toolbar__item d-lg-none">
                                     <a href="#" class="header-toolbar__btn menu-btn">
                                         <i class="fa fa-bars"></i>
@@ -266,11 +275,11 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <!-- <li class="header-toolbar__item">
+                                <li class="header-toolbar__item">
                                     <a href="#searchForm" class="header-toolbar__btn toolbar-btn">
                                         <i class="flaticon flaticon-search"></i>
                                     </a>
-                                </li> -->
+                                </li>
                                 <li class="header-toolbar__item d-lg-none">
                                     <a href="#" class="header-toolbar__btn menu-btn">
                                         <i class="fa fa-bars"></i>
@@ -370,16 +379,16 @@
         <!-- Footer End-->
 
         <!-- Searchform Popup Start -->
-        <!-- <div class="searchform__popup" id="searchForm">
+        <div class="searchform__popup" id="searchForm">
             <a href="#" class="btn-close"><i class="flaticon flaticon-cross"></i></a>
             <div class="searchform__body">
                 <p>Start typing and press Enter to search</p>
-                <form class="searchform">
-                    <input type="text" name="popup-search" id="popup-search" class="searchform__input" placeholder="Search Entire Store...">
+                <form method="GET" class="searchform" action="{% url 'shop-search' %}">
+                    <input type="text" name="q" id="popup-search" class="searchform__input" placeholder="Cari Product Kami...">
                     <button type="submit" class="searchform__submit"><i class="flaticon flaticon-magnifying-glass-icon"></i></button>
                 </form>
             </div>
-        </div> -->
+        </div>
         <!-- Searchform Popup End -->
 
         <!-- Mini Cart Start -->

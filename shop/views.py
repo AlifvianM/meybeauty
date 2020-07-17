@@ -10,7 +10,7 @@ from django.conf import settings
 from django.db.models import Avg, Sum, Count
 from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm, OrderItemForm2, MemberForm
 from rajaongkir import RajaOngkirApi
-
+from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
 
@@ -34,7 +34,7 @@ def cek_ongkir(request,kota_id, kecamatan_tujuan_id, berat, jasa_ongkir):
 	kecamatan_tujuan_id = kecamatan_tujuan_id
 	berat = berat
 	jasa_ongkir = jasa_ongkir
-	conn = http.client.HTTPConnection("pro.rajaongkir.com")
+	# conn = http.client.HTTPConnection("pro.rajaongkir.com")
 	url = "https://pro.rajaongkir.com/api/cost"  #origin=501&originType=city&destination=574&destinationType=subdistrict&weight=1700&courier=jne
 	# print(url)
 	payload = "origin=" + kota_id + "&originType=city&destination=" + kecamatan_tujuan_id + "&destinationType=subdistrict&weight=" + str(berat) + "&courier=" + jasa_ongkir
@@ -273,17 +273,32 @@ def orderupdate(request, pk):
 	headers = { 'key': settings.API_KEY_SECRET }
 	items = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False)
 	sum_price_item = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False).aggregate(Sum('total_harga'))['total_harga__sum'] or 0.00
-	print("order :", order.total_harga)
+	# print("order :", order.total_harga)
 	order.harga = sum_price_item
 	order.save()
 
 	r = requests.get(url, headers)
 	provinces = r.json()
 	if form.is_valid():
+		orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
 		order.total_harga = order.harga + order.harga_ongkir
 		# order.status_order = True
 		order.save()
 		form.save()
+		user = request.user
+		to_email = user.email
+		message = render_to_string('shop/order_email.html', {
+                'user': user,
+                'order':order,
+                'orderitem':orderitem,
+                # 'domain': current_site.domain,
+                # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                # 'token':account_activation_token.make_token(user),
+                })
+		mail_subject = 'Mennunggu Pembayaran Anda'
+		email = EmailMessage(mail_subject, message, to=[to_email])
+		email.send()
+			# return redirect(reverse('shop-list'))
 		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
 
 	context = {
@@ -437,7 +452,21 @@ def OrderBayarUpdate(request, pk):
 	if form.is_valid():
 		form.save()
 		Order.objects.filter(pk = pk).update(status_bayar = 'SUDAH', status_order = True)
-		print("FOTO :",order.bukti_pembayaran)
+		# print("FOTO :",order.bukti_pembayaran)
+		user = request.user
+		to_email = user.email
+		message = render_to_string('shop/bayar_email.html', {
+                'user': user,
+                'order':order,
+                'orderitem':orderitem,
+                # 'domain': current_site.domain,
+                # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                # 'token':account_activation_token.make_token(user),
+                })
+		mail_subject = 'Pembayaran Berhasil'
+		email = EmailMessage(mail_subject, message, to=[to_email])
+		email.send()
+			# return redirect(reverse('shop-list'))
 		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
 	context = {
 		'orders':orders,
@@ -473,6 +502,21 @@ def show_product(request):
 	}
 	return render(request, 'shop/products.html', context)
 
+
+def show_product_home(request):
+	product = Product.objects.all().order_by('-created_at')
+	# count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
+	paginator = Paginator(product, 20)
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+	context = {
+		'products':product,
+		# 'count_items':count_items,
+		'page_obj':page_obj
+	}
+	return render(request, 'shop/products.html', context)
+
+
 def member(request):
 	if request.POST:
 		form = MemberForm(request.POST)
@@ -493,5 +537,22 @@ def member(request):
 		form = MemberForm()
 	return render(request, 'shop/member.html', {'form':form})
 
+def search(request):
+	# search = search
+	template = 'shop/products.html'
+	query = request.GET.get('q', None)
+	if query:
+		product = Product.objects.filter(Q(nama__icontains = query)).order_by('-created_at')
+	else:
+		product = Product.objects.all()
+
+	paginator = Paginator(product, 20)
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+	context = {
+		'products':product,
+		'page_obj':page_obj,
+	}
+	return render(request, template, context)
 
 
