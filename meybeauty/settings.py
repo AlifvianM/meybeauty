@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
+import midtransclient
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -140,7 +140,8 @@ API_KEY_SECRET = '87883971c234e56bc2490bbf39e4837e'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = '/Users/alifvianmarco/Documents/project/drwecommerce/meybeauty/shop/static/'
 STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
@@ -148,6 +149,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
@@ -158,5 +161,18 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'printdisini2020@gmail.com'
 EMAIL_HOST_PASSWORD = 'autoprint'
+
+SNAP = midtransclient.Snap(
+    is_production=False,
+    server_key='SB-Mid-server-WdZ4coQhWUEvg0d8xaWKfDT8',
+    client_key='SB-Mid-client-HcNQMZtgAkCva4_F'
+)
+
+
+
+
+
+
+
 
 

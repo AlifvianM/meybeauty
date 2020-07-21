@@ -34,6 +34,14 @@ class PembayaranForm(forms.ModelForm):
             
             
 class OrderUpdateForm(forms.ModelForm):
+    alamat = forms.CharField(
+            widget=forms.Textarea(
+                    attrs = {
+                        'class':'form__input form__input--2'
+                    }
+                )   
+        )
+
     class Meta:
         model = Order
         # fields = '__all__'
@@ -43,6 +51,7 @@ class OrderUpdateForm(forms.ModelForm):
 				'kecamatan_tujuan',
 				'jasa_ongkir',
 				'harga_ongkir',
+                'alamat',
         	)
 
 # class OrderBayarForm(forms.ModelForm):

@@ -45,6 +45,7 @@ class Order(models.Model):
     total_harga = models.FloatField(default=0)
     bukti_pembayaran = models.ImageField(upload_to='bukti/', null=True, blank=True)
     status_bayar = models.CharField(max_length=50, choices=STATUS, default='BELUM')
+    alamat = models.TextField()
     resi = models.CharField(max_length=255, null=True, blank=True, default='Menunggu nomor resi')
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

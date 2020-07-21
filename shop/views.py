@@ -34,20 +34,10 @@ def cek_ongkir(request,kota_id, kecamatan_tujuan_id, berat, jasa_ongkir):
 	kecamatan_tujuan_id = kecamatan_tujuan_id
 	berat = berat
 	jasa_ongkir = jasa_ongkir
-	# conn = http.client.HTTPConnection("pro.rajaongkir.com")
 	url = "https://pro.rajaongkir.com/api/cost"  #origin=501&originType=city&destination=574&destinationType=subdistrict&weight=1700&courier=jne
-	# print(url)
 	payload = "origin=" + kota_id + "&originType=city&destination=" + kecamatan_tujuan_id + "&destinationType=subdistrict&weight=" + str(berat) + "&courier=" + jasa_ongkir
-	
 	r = requests.post(url,payload, headers = { 'key': settings.API_KEY_SECRET, 'content-type': "application/x-www-form-urlencoded" })
-	# r = conn.request("POST","/api/cost",payload, headers = { 'key': settings.API_KEY_SECRET, 'content-type': "application/x-www-form-urlencoded" })
-	
 	ongkir = r.json()
-
-	# for o in ongkir.values():
-	# 	print(o['results'])
-	# print(json.dumps(ongkir, indent=2))
-
 	context = {
 		'ongkir':ongkir,
 		'kota_asal':kota_id,
@@ -63,7 +53,6 @@ def cek_ongkir(request,kota_id, kecamatan_tujuan_id, berat, jasa_ongkir):
 def cek_kecamatan_tujuan(request, kota_tujuan_id):
 	kota_tujuan_id = kota_tujuan_id
 	url = "https://pro.rajaongkir.com/api/subdistrict?city=" + str(kota_tujuan_id)
-	# print(url)
 	r = requests.get(url, headers = { 'key': settings.API_KEY_SECRET })
 	kecamatan = r.json()
 	context = {
@@ -164,25 +153,23 @@ def product_detail(request, slug):
 
 @login_required
 def add_to_cart(request,pk):
-    product = get_object_or_404(Product, pk=pk)
-    cart,created = Order.objects.get_or_create(
+	pk = pk
+	now = datetime.datetime.now()
+	product = get_object_or_404(Product, pk=pk)
+	cart,created = Order.objects.get_or_create(
         user=request.user,
         status_order = False,
          )
-    cart.kode_nota = str(datetime.datetime.now())
-    print('cart :', cart, 'kode nota', cart.kode_nota)
-    print('created :', created)
-    orderitem,created = OrderItem.objects.get_or_create(product=product,order=cart, price=product.harga)
-    total = OrderItem.objects.filter(order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
-    # order.quantity += 1
-    if created:
-	    orderitem.order.kode_nota = str(datetime.datetime.now())
-	    orderitem.order.harga = total
-	    orderitem.save()
-	    print(orderitem)
-	    cart.save()
-    messages.success(request, "Cart updated!")
-    return redirect('shop-showcart')
+	orderitem,created = OrderItem.objects.get_or_create(product=product,order=cart, price=product.harga)
+	total = OrderItem.objects.filter(order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
+	if created:
+		kode = 'INV'+now.strftime('%Y')+now.strftime('%m')+now.strftime('%d')+str(orderitem.order.pk)
+		orderitem.order.kode_nota = kode
+		orderitem.order.harga = total
+		orderitem.save()
+		cart.save()
+	messages.success(request, "Cart updated!")
+	return redirect('shop-showcart')
 
 
 # 2020-06-06 05:24:29.900785
@@ -449,19 +436,122 @@ def OrderBayarUpdate(request, pk):
 	print(form.kode_nota)
 	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
 	orders = Order.objects.filter(pk = pk, user = request.user)
+# 	param = {
+#     "transaction_details": {
+#         "order_id": order.kode_nota ,
+#         "gross_amount": 10000
+#     },
+#     "item_details": [{
+#         "id": "ITEM1",
+#         "price": 10000,
+#         "quantity": 1,
+#         "name": "Midtrans Bear",
+#         "brand": "Midtrans",
+#         "category": "Toys",
+#         "merchant_name": "Midtrans"
+#     }],
+#     "customer_details": {
+#         "first_name": "John",
+#         "last_name": "Watson",
+#         "email": "test@example.com",
+#         "phone": "+628123456",
+#         "billing_address": {
+#             "first_name": "John",
+#             "last_name": "Watson",
+#             "email": "test@example.com",
+#             "phone": "081 2233 44-55",
+#             "address": "Sudirman",
+#             "city": "Jakarta",
+#             "postal_code": "12190",
+#             "country_code": "IDN"
+#         },
+#         "shipping_address": {
+#             "first_name": "John",
+#             "last_name": "Watson",
+#             "email": "test@example.com",
+#             "phone": "0 8128-75 7-9338",
+#             "address": "Sudirman",
+#             "city": "Jakarta",
+#             "postal_code": "12190",
+#             "country_code": "IDN"
+#         }
+#     },
+    
+#     "credit_card": {
+#         "secure": True,
+#         "bank": "bca",
+#         "installment": {
+#             "required": False,
+#             "terms": {
+#                 "bni": [3, 6, 12],
+#                 "mandiri": [3, 6, 12],
+#                 "cimb": [3],
+#                 "bca": [3, 6, 12],
+#                 "offline": [6, 12]
+#             }
+#         },
+#         "whitelist_bins": [
+#             "48111111",
+#             "41111111"
+#         ]
+#     },
+#     "bca_va": {
+#         "va_number": "12345678911",
+#         "free_text": {
+#             "inquiry": [
+#                 {
+#                     "en": "text in English",
+#                     "id": "text in Bahasa Indonesia"
+#                 }
+#             ],
+#             "payment": [
+#                 {
+#                     "en": "text in English",
+#                     "id": "text in Bahasa Indonesia"
+#                 }
+#             ]
+#         }
+#     },
+#     "bni_va": {
+#         "va_number": "12345678"
+#     },
+#     "permata_va": {
+#         "va_number": "1234567890",
+#         "recipient_name": "SUDARSONO"
+#     },
+#     "callbacks": {
+#         "finish": "https://demo.midtrans.com"
+#     },
+#     "expiry": {
+#         "start_time": "2020-12-20 18:11:08 +0700",
+#         "unit": "minute",
+#         "duration": 9000
+#     },
+#     "custom_field1": "custom field 1 content",
+#     "custom_field2": "custom field 2 content",
+#     "custom_field3": "custom field 3 content"
+# }
+# 	client = 'SB-Mid-client-HcNQMZtgAkCva4_F'
+
+# 	transaction = settings.SNAP.create_transaction(param)
+# 	transaction_token = transaction['token']
+# 	print('transaction_token:')
+# 	print(transaction_token)
+# 	# transaction_redirect_url = transaction['redirect_url']
+# 	transaction_redirect_url = reverse('shop-orderdetail', kwargs={'pk':pk})
+# 	print('transaction_redirect_url:')
+# 	print(transaction_redirect_url)
+
 	if form.is_valid():
 		form.save()
 		Order.objects.filter(pk = pk).update(status_bayar = 'SUDAH', status_order = True)
-		# print("FOTO :",order.bukti_pembayaran)
+		orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
 		user = request.user
 		to_email = user.email
 		message = render_to_string('shop/bayar_email.html', {
                 'user': user,
                 'order':order,
                 'orderitem':orderitem,
-                # 'domain': current_site.domain,
-                # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                # 'token':account_activation_token.make_token(user),
                 })
 		mail_subject = 'Pembayaran Berhasil'
 		email = EmailMessage(mail_subject, message, to=[to_email])
@@ -472,19 +562,31 @@ def OrderBayarUpdate(request, pk):
 		'orders':orders,
 		'items':items,
 		'form':form,
+		# 'token':transaction_token,
+		# 'transaction_redirect_url':transaction_redirect_url,
+		# 'clk':client,
 	}		
 	return render(request, 'shop/bayar.html', context)
 
 def orderdetail(request, pk):
 	order = get_object_or_404(Order, pk=pk)
+	
+	kota_id = order.kota_asal
+	kecamatan_tujuan_id = order.kecamatan_tujuan
+	berat = 1000
+	jasa_ongkir = order.jasa_ongkir
+	url = "https://pro.rajaongkir.com/api/cost"  #origin=501&originType=city&destination=574&destinationType=subdistrict&weight=1700&courier=jne
+	payload = "origin=" + kota_id + "&originType=city&destination=" + kecamatan_tujuan_id + "&destinationType=subdistrict&weight=" + str(berat) + "&courier=" + jasa_ongkir
+	r = requests.post(url,payload, headers = { 'key': settings.API_KEY_SECRET, 'content-type': "application/x-www-form-urlencoded" })
+	ongkir = r.json()
+
 	orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
 	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
-	sum_price = order.harga + order.harga_ongkir 
 	context = {
 		'orders':order,
 		'items':orderitem,
 		'count_items':count_items,
-		'total':sum_price
+		'ongkir':ongkir
 	}
 	return render(request, 'shop/order_detail.html', context)
 
@@ -505,13 +607,11 @@ def show_product(request):
 
 def show_product_home(request):
 	product = Product.objects.all().order_by('-created_at')
-	# count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	paginator = Paginator(product, 20)
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
 	context = {
 		'products':product,
-		# 'count_items':count_items,
 		'page_obj':page_obj
 	}
 	return render(request, 'shop/products.html', context)
@@ -525,9 +625,6 @@ def member(request):
 			to_email = form.cleaned_data.get('email')
 			message = render_to_string('shop/member_email.html', {
                 'user': user,
-                # 'domain': current_site.domain,
-                # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                # 'token':account_activation_token.make_token(user),
                 })
 			mail_subject = 'Thanks For Being Member Of DRWSkincare Banyuwangi.'
 			email = EmailMessage(mail_subject, message, to=[to_email])
@@ -538,7 +635,6 @@ def member(request):
 	return render(request, 'shop/member.html', {'form':form})
 
 def search(request):
-	# search = search
 	template = 'shop/products.html'
 	query = request.GET.get('q', None)
 	if query:

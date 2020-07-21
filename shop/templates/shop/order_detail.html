@@ -53,10 +53,28 @@
 
                                             </tr>
                                             {% endif %}
+                                        <tr>
+                                            <tr class="cart-subtotal">
+                                                <th>Keterangan Ongkir</th>
+                                                {% for o in ongkir.values %}
+                                                <td>
+                                                    <ul> 
+                                                        <li>{{orders.alamat}}</li>
+                                                        <li>Kecamatan {{o.destination_details.subdistrict_name}}</li>
+                                                        <li>Kabupaten {{o.destination_details.city}}</li>
+                                                        <li>Provinsi {{o.destination_details.province}}</li>
+                                                    </ul>
+                                                </td>
+                                                
+                                                    
+                                                {% endfor %}
+                                            </tr>
+                                        </tr>
 									</table>
                                 </form>
                             </div>
-                        </div>
+                        </div>                        
+
                         <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
                             <div class="order-details">
                                 <div class="checkout-title mt--10">
@@ -89,7 +107,7 @@
                                             </tr>
                                             <tr class="cart-subtotal">
                                                 <th>Total</th>
-                                                <td class="text-right">Rp.{{total}}</td>
+                                                <td class="text-right">Rp.{{orders.total_harga}}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
