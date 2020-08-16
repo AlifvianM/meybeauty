@@ -25,7 +25,7 @@ SECRET_KEY = '(sd5b)70^k^^tra^2xpqku@^)b0m+snt%$_p(u^sm-4bb0($p_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '*']
 
 
 # Application definition
@@ -38,12 +38,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'adminpage',
+    'users',
+    'api',
+    'shop',
+
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_api_key',
-    'shop',
-    'users',
-    'api',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +65,37 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'meybeauty.urls'
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+       {'METHOD': 'oauth2',
+        'SCOPE': ['email','public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time'],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'kr_KR',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.4'}}
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_USERNAME_REQURIED=True
 
 TEMPLATES = [
     {
@@ -80,11 +119,30 @@ WSGI_APPLICATION = 'meybeauty.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'drw',
+
+        'USER': 'admin',
+
+        'PASSWORD': 'admin',
+
+        'HOST': 'localhost',
+
+        'PORT': '',
+
     }
+
 }
 
 
@@ -127,7 +185,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = 'shop-list'
+# LOGIN_REDIRECT_URL = 'shop-list'
+LOGIN_REDIRECT_URL = "/" 
 
 LOGIN_URL = 'register'
 
@@ -137,23 +196,21 @@ LOGOUT_REDIRECT_URL = 'register'
 
 API_KEY_SECRET = '87883971c234e56bc2490bbf39e4837e'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
+# # Static files (CSS, JavaScript, Images)
+# # https://docs.djangoproject.com/en/3.0/howto/static-files/
+# STATIC_URL = '/static/'
+# MEDIA_URL = '/media/'
+# # STATICFILES_DIRS = [BASE_DIR+'/assets/']
+# STATIC_ROOT = '/Users/alifvianmarco/Documents/project/drwecommerce/meybeautybackup/static/shop/assets'
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# MEDIA_ROOT='/Users/alifvianmarco/Documents/project/drwecommerce/meybeautybackup/media/'
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_ROOT = '/Users/alifvianmarco/Documents/project/drwecommerce/meybeauty/shop/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

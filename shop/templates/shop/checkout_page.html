@@ -104,15 +104,10 @@
 												</select>
 										</div>
 									</div>
-
-
-									<!-- <label>Berat</label>
-									<input type="number" name="Berat" value="1000" id="berat"> -->
-
 									<div class="form-row mb--20">
                                         <div class="form__group col-12">
-                                            <!-- <label for="berat" class="form__label form__label--2">Berat<span class="required">*</span></label> -->
-                                            <input type="hidden" name="Berat" value="1000" id="berat" class="form__input form__input--2">
+                                            <label for="berat" class="form__label form__label--2">Berat<span class="required">*</span></label>
+                                            <input type="" name="berat" value="{{order.berat}}" id="berat" class="form__input form__input--2" readonly="">
                                         </div>
                                     </div>
 									
@@ -145,7 +140,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Product</th>
-                                                <th class="text-right">Total</th>
+                                                <th class="">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -155,15 +150,22 @@
                                                         <th>{{item.product.nama}} 
                                                             <strong><span>&#10005;</span>{{item.quantity}}</strong>
                                                         </th>
-                                                        <td class="text-right">Rp.{{item.total_harga}}</td>
+                                                        <th>
+                                                            {{item.weight}}
+                                                        </th>
+                                                        <td>Rp.{{item.total_harga}}</td>
                                                     </tr>
                                                 {% endfor %}
                                             
                                         </tbody>
                                         <tfoot>
-                                            <tr class="cart-subtotal">
+                                            <!-- <tr class="cart-subtotal">
+                                                <th>Berat Total</th>
+                                                <td class="text-right">{{order.berat}}gr</td>
+                                            </tr> -->
+                                            <tr class="">
                                                 <th>Subtotal</th>
-                                                <td class="text-right">Rp.{{total}}</td>
+                                                <td class="">Rp.{{total}}</td>
                                             </tr>
                                            <!--  <tr class="shipping">
                                                 <th>Shipping</th>

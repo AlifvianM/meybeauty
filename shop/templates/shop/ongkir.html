@@ -23,7 +23,7 @@
 						<!-- <h4>{{j.costs}}</h4> -->
 						{% for k in j.costs %}
 							{% for l in k.cost %}
-								<option value="{{l.value}}">{{k.service}} - Harga : {{l.value}}</option>
+								<option value="{{l.value}}">{{k.service}} ({{l.etd}} Hari) - Harga : Rp.{{l.value}}</option>
 							{% endfor %}
 						{% endfor %}
 					{% endfor %}

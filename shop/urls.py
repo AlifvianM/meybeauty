@@ -27,6 +27,9 @@ from .views import (
 	show_product_home,
 	member,
 	search,
+	updateresi,
+	all_transaction,
+	reseller,
 	)
 
 from django.conf.urls.static import static
@@ -35,6 +38,9 @@ from django.conf import settings
 
 
 urlpatterns= [
+	path('reseller', reseller, name = 'shop-reseller'),
+	path('alltransaksi', all_transaction, name = 'show_all-transaction'),
+	path('updateresi/<int:pk>', updateresi, name='shop-resi'),
 	path('search', search, name='shop-search'),
 	path('member', member, name='shop-member'),
 	path('orderdetail/<int:pk>', orderdetail, name='shop-orderdetail'),

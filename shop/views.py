@@ -8,7 +8,7 @@ from datetime import datetime
 from users.models import Profile
 from django.conf import settings
 from django.db.models import Avg, Sum, Count
-from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm, OrderItemForm2, MemberForm
+from .forms import PembayaranForm, OrderUpdateForm,OrderBayarForm, OrderItemForm, OrderItemForm2, MemberForm, OrderResiForm, ResellerForm
 from rajaongkir import RajaOngkirApi
 from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -23,7 +23,7 @@ from django.core.paginator import Paginator
 
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -111,7 +111,7 @@ def cek_provinsi(request):
 	return render(request, template, context)
 
 def dashboard(request):
-	pl = Product.objects.all()
+	pl = Product.objects.all().order_by('-created_at')
 
 	context = {
 		'products' : pl,
@@ -120,7 +120,7 @@ def dashboard(request):
 
 @login_required
 def product_list(request):
-	pl = Product.objects.all()
+	pl = Product.objects.all().order_by('-created_at')
 	items = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False)
 	total = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
 	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
@@ -143,9 +143,11 @@ def product_list(request):
 def product_detail(request, slug):
 	obj = get_object_or_404(Product, slug=slug)
 	count_items = OrderItem.objects.filter(order__status_order = False).aggregate(Count('id'))['id__count'] or 0
+	product = Product.objects.all().order_by('-created_at')
 	context = {
 		'obj':obj,
 		'count_items':count_items,
+		'product':product,
 	}
 	template = 'shop/product-details.html'
 	return render(request, template, context)
@@ -160,7 +162,7 @@ def add_to_cart(request,pk):
         user=request.user,
         status_order = False,
          )
-	orderitem,created = OrderItem.objects.get_or_create(product=product,order=cart, price=product.harga)
+	orderitem,created = OrderItem.objects.get_or_create(product=product,order=cart, price=product.harga, total_weight=product.berat)
 	total = OrderItem.objects.filter(order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
 	if created:
 		kode = 'INV'+now.strftime('%Y')+now.strftime('%m')+now.strftime('%d')+str(orderitem.order.pk)
@@ -174,7 +176,7 @@ def add_to_cart(request,pk):
 
 # 2020-06-06 05:24:29.900785
 
-
+@login_required
 def delete_from_cart(request, **kwargs):
     item_to_delete = OrderItem.objects.filter(product__slug=kwargs['slug'])
     if item_to_delete.exists():
@@ -182,6 +184,7 @@ def delete_from_cart(request, **kwargs):
         messages.info(request, "Item has been deleted")
     return redirect('shop-showcart')
 
+@login_required
 def show_cart(request):
 	items = OrderItem.objects.filter(order__user = request.user, order__status_order = False)
 	order = Order.objects.filter(user = request.user, status_order=False)
@@ -253,6 +256,7 @@ class OrderUpdateView(UpdateView):
 		return reverse('shop-bayar', kwargs={'pk':self.object.id})
 
 
+@login_required
 def orderupdate(request, pk):
 	order = get_object_or_404(Order, pk=pk)
 	form = OrderUpdateForm(request.POST or None, instance = order)
@@ -260,8 +264,9 @@ def orderupdate(request, pk):
 	headers = { 'key': settings.API_KEY_SECRET }
 	items = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False)
 	sum_price_item = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False).aggregate(Sum('total_harga'))['total_harga__sum'] or 0.00
-	# print("order :", order.total_harga)
+	sum_weight_item = OrderItem.objects.filter(order__user = request.user or None, order__status_order = False).aggregate(Sum('total_weight'))['total_weight__sum'] or 0.00
 	order.harga = sum_price_item
+	order.berat = sum_weight_item
 	order.save()
 
 	r = requests.get(url, headers)
@@ -283,12 +288,20 @@ def orderupdate(request, pk):
                 # 'token':account_activation_token.make_token(user),
                 })
 		mail_subject = 'Mennunggu Pembayaran Anda'
-		email = EmailMessage(mail_subject, message, to=[to_email])
-		email.send()
+# 		email = EmailMessage(mail_subject, message, to=[to_email])
+# 		email.send()
+		send_mail(
+		    subject = mail_subject,
+		    message = message,
+		    from_email = 'support@drw-bwi.xyz',
+		    recipient_list = [to_email],
+		    fail_silently = False,
+		)
 			# return redirect(reverse('shop-list'))
 		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
 
 	context = {
+		'order':order,
 		'total':sum_price_item,
 		'form':form,
 		'provinces':provinces,
@@ -326,6 +339,7 @@ class OrderBayarUpdateView(UpdateView):
 	def get_success_url(self, **kwargs):
 		return reverse('shop-list')
 
+@login_required
 def order_update(request, pk):
 	url = "https://pro.rajaongkir.com/api/province"
 	headers = { 'key': settings.API_KEY_SECRET }
@@ -348,21 +362,7 @@ def order_update(request, pk):
 	}
 	return render(request, template, context)
 
-# def orderitem_update(request, pk):
-# 	ord_item = get_object_or_404(OrderItem, pk=pk)
-# 	form = OrderItemForm(request.POST or None)
-	
-# 	if form.is_valid():
-# 		form.save()
-
-	
-# 	context = {
-# 		"form": form
-# 		}
-# 	return redirect(reverse('shop-checkout', kwargs = {'pk':pk}))
-	# return redirect('/')
-
-
+@login_required
 def orderitem_update(request, order_id):
 			
 	
@@ -371,27 +371,19 @@ def orderitem_update(request, order_id):
 		}
 	return redirect(reverse('shop-checkout', kwargs = {'pk':order_id}))
 
-
+@login_required
 def updateorderitem(request, value, pk_orderitem):
 	orderitem = get_object_or_404(OrderItem, pk = pk_orderitem)
 	OrderItem.objects.filter(order__user = request.user, order__status_order = False, pk = pk_orderitem).update(quantity=value)
 	oi = OrderItem.objects.get(pk = pk_orderitem, order__status_order = False, order__user = request.user)
-	print("quantity : ", oi.quantity)
-	oi.total_harga = oi.quantity * oi.price
-	print('harga :', oi.total_harga)
-	OrderItem.objects.filter(order__user = request.user, order__status_order = False, pk = pk_orderitem).update(total_harga=oi.total_harga)
-
+	oi.total_harga = value * oi.price
+	oi.total_weight = value * oi.product.berat
+	OrderItem.objects.filter(order__user = request.user, order__status_order = False, pk = pk_orderitem).update(total_harga=oi.total_harga, total_weight = oi.total_weight)
 	return HttpResponse(value)
 
 class OrderItemUpdateView(UpdateView):
 	model = OrderItem
 	form_class = OrderItemForm
-	# queryset = OrderItem.objects.filter(order__status_order = False)
-	# success_url = reverse_lazy('shop-list')
-
-	# def post(self, request, *args, **kwargs):
-	# 	self.object = self.get_object()
-	# 	return super().post(request, *args, **kwargs)
 	def form_valid(self, form):
 		qty = request.POST.getlist('quantity')
 		self.object.order_set.update(quantity =qty )
@@ -399,6 +391,7 @@ class OrderItemUpdateView(UpdateView):
 	def get_success_url(self):
 		return reverse('shop-checkout', kwargs={'pk':object.order.id})
 
+@login_required
 def transaction(request):
 	order = Order.objects.filter( user = request.user).order_by('-created_at')
 	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
@@ -408,27 +401,7 @@ def transaction(request):
 	}
 	return render(request, 'shop/transaction.html', context)
 
-
-# def transaction(request):
-# 	order = Order.objects.filter(user = request.user, status_order = ).order_by('-created_at')
-
-
-
-# def OrderBayarUpdate(request, pk):
-# 	order = get_object_or_404(Order, pk=pk)
-# 	form = OrderBayarForm(request.POST or None, instance = order)
-# 	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
-# 	orders = Order.objects.filter(pk = pk, user = request.user)
-# 	if form.is_valid():
-# 		Order.objects.filter(pk = pk).update(status_order = True)
-# 		return redirect(reverse('shop-list'))
-# 	context = {
-# 		'orders':orders,
-# 		'items':items,
-# 		'form':form,
-# 	}		
-# 	return render(request, 'shop/bayar.html', context)
-
+@login_required
 def OrderBayarUpdate(request, pk):
 	order = get_object_or_404(Order, pk=pk)
 	form = OrderBayarForm(request.POST, request.FILES, instance = order)
@@ -436,112 +409,6 @@ def OrderBayarUpdate(request, pk):
 	print(form.kode_nota)
 	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
 	orders = Order.objects.filter(pk = pk, user = request.user)
-# 	param = {
-#     "transaction_details": {
-#         "order_id": order.kode_nota ,
-#         "gross_amount": 10000
-#     },
-#     "item_details": [{
-#         "id": "ITEM1",
-#         "price": 10000,
-#         "quantity": 1,
-#         "name": "Midtrans Bear",
-#         "brand": "Midtrans",
-#         "category": "Toys",
-#         "merchant_name": "Midtrans"
-#     }],
-#     "customer_details": {
-#         "first_name": "John",
-#         "last_name": "Watson",
-#         "email": "test@example.com",
-#         "phone": "+628123456",
-#         "billing_address": {
-#             "first_name": "John",
-#             "last_name": "Watson",
-#             "email": "test@example.com",
-#             "phone": "081 2233 44-55",
-#             "address": "Sudirman",
-#             "city": "Jakarta",
-#             "postal_code": "12190",
-#             "country_code": "IDN"
-#         },
-#         "shipping_address": {
-#             "first_name": "John",
-#             "last_name": "Watson",
-#             "email": "test@example.com",
-#             "phone": "0 8128-75 7-9338",
-#             "address": "Sudirman",
-#             "city": "Jakarta",
-#             "postal_code": "12190",
-#             "country_code": "IDN"
-#         }
-#     },
-    
-#     "credit_card": {
-#         "secure": True,
-#         "bank": "bca",
-#         "installment": {
-#             "required": False,
-#             "terms": {
-#                 "bni": [3, 6, 12],
-#                 "mandiri": [3, 6, 12],
-#                 "cimb": [3],
-#                 "bca": [3, 6, 12],
-#                 "offline": [6, 12]
-#             }
-#         },
-#         "whitelist_bins": [
-#             "48111111",
-#             "41111111"
-#         ]
-#     },
-#     "bca_va": {
-#         "va_number": "12345678911",
-#         "free_text": {
-#             "inquiry": [
-#                 {
-#                     "en": "text in English",
-#                     "id": "text in Bahasa Indonesia"
-#                 }
-#             ],
-#             "payment": [
-#                 {
-#                     "en": "text in English",
-#                     "id": "text in Bahasa Indonesia"
-#                 }
-#             ]
-#         }
-#     },
-#     "bni_va": {
-#         "va_number": "12345678"
-#     },
-#     "permata_va": {
-#         "va_number": "1234567890",
-#         "recipient_name": "SUDARSONO"
-#     },
-#     "callbacks": {
-#         "finish": "https://demo.midtrans.com"
-#     },
-#     "expiry": {
-#         "start_time": "2020-12-20 18:11:08 +0700",
-#         "unit": "minute",
-#         "duration": 9000
-#     },
-#     "custom_field1": "custom field 1 content",
-#     "custom_field2": "custom field 2 content",
-#     "custom_field3": "custom field 3 content"
-# }
-# 	client = 'SB-Mid-client-HcNQMZtgAkCva4_F'
-
-# 	transaction = settings.SNAP.create_transaction(param)
-# 	transaction_token = transaction['token']
-# 	print('transaction_token:')
-# 	print(transaction_token)
-# 	# transaction_redirect_url = transaction['redirect_url']
-# 	transaction_redirect_url = reverse('shop-orderdetail', kwargs={'pk':pk})
-# 	print('transaction_redirect_url:')
-# 	print(transaction_redirect_url)
-
 	if form.is_valid():
 		form.save()
 		Order.objects.filter(pk = pk).update(status_bayar = 'SUDAH', status_order = True)
@@ -554,26 +421,28 @@ def OrderBayarUpdate(request, pk):
                 'orderitem':orderitem,
                 })
 		mail_subject = 'Pembayaran Berhasil'
-		email = EmailMessage(mail_subject, message, to=[to_email])
-		email.send()
-			# return redirect(reverse('shop-list'))
+		send_mail(
+		    subject = mail_subject,
+		    message = message,
+		    from_email = 'support@drw-bwi.xyz',
+		    recipient_list = [to_email],
+		    fail_silently = False,
+		)
 		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
 	context = {
 		'orders':orders,
 		'items':items,
 		'form':form,
-		# 'token':transaction_token,
-		# 'transaction_redirect_url':transaction_redirect_url,
-		# 'clk':client,
 	}		
 	return render(request, 'shop/bayar.html', context)
 
+@login_required
 def orderdetail(request, pk):
 	order = get_object_or_404(Order, pk=pk)
 	
 	kota_id = order.kota_asal
 	kecamatan_tujuan_id = order.kecamatan_tujuan
-	berat = 1000
+	berat = order.berat
 	jasa_ongkir = order.jasa_ongkir
 	url = "https://pro.rajaongkir.com/api/cost"  #origin=501&originType=city&destination=574&destinationType=subdistrict&weight=1700&courier=jne
 	payload = "origin=" + kota_id + "&originType=city&destination=" + kecamatan_tujuan_id + "&destinationType=subdistrict&weight=" + str(berat) + "&courier=" + jasa_ongkir
@@ -590,18 +459,29 @@ def orderdetail(request, pk):
 	}
 	return render(request, 'shop/order_detail.html', context)
 
-@login_required
+# @login_required
 def show_product(request):
-	product = Product.objects.all().order_by('-created_at')
-	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
-	paginator = Paginator(product, 1)
-	page_number = request.GET.get('page')
-	page_obj = paginator.get_page(page_number)
-	context = {
-		'products':product,
-		'count_items':count_items,
-		'page_obj':page_obj
-	}
+	if request.user.is_active:	
+		product = Product.objects.all().order_by('-created_at')
+		count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
+		paginator = Paginator(product, 20)
+		page_number = request.GET.get('page')
+		page_obj = paginator.get_page(page_number)
+		context = {
+			'products':product,
+			'count_items':count_items,
+			'page_obj':page_obj
+		}
+	else:
+		product = Product.objects.all().order_by('-created_at')
+		paginator = Paginator(product, 20)
+		page_number = request.GET.get('page')
+		page_obj = paginator.get_page(page_number)
+		context = {
+			'products':product,
+			# 'count_items':count_items,
+			'page_obj':page_obj
+		}
 	return render(request, 'shop/products.html', context)
 
 
@@ -621,18 +501,26 @@ def member(request):
 	if request.POST:
 		form = MemberForm(request.POST)
 		if form.is_valid():
+			form.save()
 			user = form.cleaned_data.get('nama')
 			to_email = form.cleaned_data.get('email')
 			message = render_to_string('shop/member_email.html', {
                 'user': user,
                 })
 			mail_subject = 'Thanks For Being Member Of DRWSkincare Banyuwangi.'
-			email = EmailMessage(mail_subject, message, to=[to_email])
-			email.send()
+			# email = EmailMessage(mail_subject, message, to=[to_email])
+			# email.send()
+			send_mail(
+			    subject = mail_subject,
+			    message = message,
+			    from_email = 'support@drw-bwi.xyz',
+			    recipient_list = [to_email],
+			    fail_silently = False,
+			)
 			return redirect(reverse('shop-list'))
 	else:
 		form = MemberForm()
-	return render(request, 'shop/member.html', {'form':form})
+	return render(request, 'shop/member.html', {'form':form, 'title':'Join Member'})
 
 def search(request):
 	template = 'shop/products.html'
@@ -650,5 +538,78 @@ def search(request):
 		'page_obj':page_obj,
 	}
 	return render(request, template, context)
+
+
+def updateresi(request, pk):
+	if request.user.is_superuser:
+		resi = get_object(Order, pk = pk)
+		form = OrderResiForm(request.POST)
+		if form.is_valid():
+			resi = form.cleaned_data.get('resi')
+			to_email = resi.user.email
+			message = render_to_string('shop/resi_email.html', {
+                'user': user,
+                'resi': resi,
+                })
+			mail_subject = 'Nomor Resi Pesanan Anda Telah Ditambahkan.'
+			# email = EmailMessage(mail_subject, message, to=[to_email])
+			# email.send()
+			send_mail(
+			    subject = mail_subject,
+			    message = message,
+			    from_email = 'support@drw-bwi.xyz',
+			    recipient_list = [to_email],
+			    fail_silently = False,
+			)
+		else:
+			resi = OrderResiForm()
+		context = {
+			'form':OrderResiForm()
+		}
+		return render(request, 'shop/bayar.html', context)
+	else:
+		return redirect(reverse('shop-list'))
+
+
+def	all_transaction(request):
+	if request.user.is_superuser:
+		order = Order.objects.all().order_by('-created_at')
+		context = {
+			'order':order,
+		}
+		return render(request, 'shop/transaction.html', context)
+	else:
+		return redirect(reverse('shop-list'))
+
+
+def reseller(request):
+	if request.POST:
+		form = ResellerForm(request.POST)
+		if form.is_valid():
+			form.save()
+			user = form.cleaned_data.get('nama')
+			to_email = form.cleaned_data.get('email')
+			message = render_to_string('shop/member_email.html', {
+                'user': user,
+                })
+			mail_subject = 'Thanks For Being Reseller Of DRWSkincare Banyuwangi.'
+			send_mail(
+			    subject = mail_subject,
+			    message = message,
+			    from_email = 'support@drw-bwi.xyz',
+			    recipient_list = [to_email],
+			    fail_silently = False,
+			)
+			return redirect(reverse('shop-list'))
+		else:
+			return redirect(reverse('shop-reseller'))
+	else:
+		form = ResellerForm()
+	context = {
+		'form':form,
+		'title':'Join Reseller'
+	}
+	return render(request, 'shop/member.html', context)
+
 
 

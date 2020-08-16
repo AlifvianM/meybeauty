@@ -1,0 +1,53 @@
+{% extends "adminpage/index.html" %}
+
+
+
+
+{% block content %}
+<div class="card shadow mb-4">
+	<div class="card-header py-3">
+		<h6 class="m-0 font-weight-bold text-primary">Keterangan Kode Nota {{order.kode_nota}}</h6>
+	</div>
+	<div class="card-body">
+		<table>
+			<tr>
+				<th>Kode Nota</th>
+				<td>{{order.kode_nota}}</td>
+			</tr>
+			<tr>
+				<th>Pemesan</th>
+				<td>{{order.user.username}}</td>
+			</tr>
+			<tr>
+				<th>Ongkir</th>
+				<td>{{order.jasa_ongkir}}</td>
+			</tr>
+			<tr>
+				<th>Harga Pemesanan</th>
+				<td>Rp.{{order.harga}}</td>
+			</tr>
+			<tr>
+				<th>Harga Ongkir</th>
+				<td>Rp.{{order.harga_ongkir}}</td>
+			</tr>
+			<tr>
+				<th>Total</th>
+				<td>Rp.{{order.total_harga}}</td>
+			</tr>
+			<tr>
+				<th>Status Order</th>
+				<td>{{order.status_order}}</td>
+			</tr>
+			<tr>
+				<th>Resi</th>
+				<td>{{order.resi}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+
+
+
+
+{% endblock content %}

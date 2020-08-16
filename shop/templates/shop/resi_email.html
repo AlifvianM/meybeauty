@@ -1,0 +1,20 @@
+{% autoescape off %}
+Hello, {{ user.username }}!
+
+Kami Telah Menambahkan Nomor Resi ke Pemesanan anda dengan kode {{order.kode_nota}}. Cek Pesanan Anda di Rajaongkir.com Untuk Informasi Lokasi Barang Anda.
+
+Nomor Resi: {{resi}}
+
+Detail Barang:
+{% for oi in orderitem %}
+{{oi.product.nama}} X {{oi.quantity}} = {{oi.price}}
+{% endfor %}
+ongkir = {{order.harga_ongkir}}
+total = {{order.total_harga}}
+
+
+Thank You
+Founder of DRWSkincare Banyuwangi
+
+Mey
+{% endautoescape %}

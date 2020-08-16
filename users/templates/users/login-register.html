@@ -1,5 +1,6 @@
 {% extends "shop/index.html" %}
 
+
 {% block content %}
      <!-- Breadcrumb area Start -->
         <div class="breadcrumb-area bg-color ptb--90" data-bg-color="#f6f6f6">
@@ -41,13 +42,10 @@
                                     </div>
                                     <div class="d-flex align-items-center mb--20">
                                         <div class="form__group mr--30">
-                                            <input type="submit" value="Log in" class="btn-submit">
+                                            <input type="submit" value="Log in" class="btn btn-fullwidth btn-bg-red btn-color-white ml-2">
+                                            <a href="{% url 'facebook_login' %}" class="btn btn-fullwidth btn-bg-red btn-color-white ml-2 ">Login With Facebook</a>
                                         </div>
                                         <div class="form__group">
-                                            <label class="form__label checkbox-label" for="store_session">
-                                                <input type="checkbox" name="store_session" id="store_session">
-                                                <span>Remember me</span>
-                                            </label>
                                         </div>
                                     </div>
                                     <a class="forgot-pass" href="#">Lost your password?</a>

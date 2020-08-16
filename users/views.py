@@ -12,6 +12,8 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django.core.mail import send_mail
+
 
 # Create your views here.
 def login_view(request):
@@ -20,7 +22,10 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        return redirect('shop-list')
+        if user.is_superuser:
+            return redirect('adminpage-index')
+        else:
+            return redirect('shop-list')
         # ...
     else:
         # messages.danger("Akun tidak dapat masuk")
@@ -33,17 +38,17 @@ def register(request):
         p_form = ProfileForm(request.POST)
         a_form = MyAuthForm
         if form.is_valid() and p_form.is_valid():
-        	user = form.save(commit=False)
-        	user.is_active = True
-        	user.save()
-        	profile = p_form.save(commit=False)
-        	profile.user = user
-        	profile.save()
-        	new_user = authenticate(username=form.cleaned_data['username'],
+            user = form.save(commit=False)
+            user.is_active = True
+            user.save()
+            profile = p_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            new_user = authenticate(username=form.cleaned_data['username'],
                                     password=form.cleaned_data['password1'],
                                     )
-        	login(request, new_user)
-        	return redirect('shop-list')
+            login(request, new_user)
+            return redirect('shop-list')
 
             # user = form.save(commit=False)
             # user.is_active = False
@@ -95,11 +100,17 @@ def signup(request):
                 'token':account_activation_token.make_token(user),
             })
             to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                        mail_subject, message, to=[to_email]
+            # email = EmailMessage(
+            #             mail_subject, message, to=[to_email]
+            # )
+            # email.send()
+            send_mail(
+                subject = mail_subject,
+                message = message,
+                from_email = 'printdisini2020@gmail.com',
+                recipient_list = [to_email],
+                fail_silently = False,
             )
-            email.send()
-            # return HttpResponse('Please confirm your email address to complete the registration')
             return redirect('register_success')
     else:
         a_form = MyAuthForm()

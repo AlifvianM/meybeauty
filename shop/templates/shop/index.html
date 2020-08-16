@@ -9,8 +9,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicons -->
-    <link rel="shortcut icon" href="{% static "shop/assets/img/favicon.ico" %} " type="image/x-icon">
-    <link rel="apple-touch-icon" href="{% static "shop/assets/img/icon.png" %} ">
+    <link rel="shortcut icon" href="{% static "shop/assets/drw.png" %} " type="image/x-icon">
+    <link rel="apple-touch-icon" href="{% static "shop/assets/drw.png" %} ">
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     
     <!-- ************************* CSS Files ************************* -->
@@ -26,13 +26,13 @@
 <body>
 
     <!-- Preloader Start -->
-    <div class="zakas-preloader active">
-        <div class="zakas-preloader-inner h-100 d-flex align-items-center justify-content-center">
-            <div class="zakas-child zakas-bounce1"></div>
-            <div class="zakas-child zakas-bounce2"></div>
-            <div class="zakas-child zuka-bounce3"></div>
-        </div>
-    </div>
+    <!--<div class="zakas-preloader active">-->
+    <!--    <div class="zakas-preloader-inner h-100 d-flex align-items-center justify-content-center">-->
+    <!--        <div class="zakas-child zakas-bounce1"></div>-->
+    <!--        <div class="zakas-child zakas-bounce2"></div>-->
+    <!--        <div class="zakas-child zuka-bounce3"></div>-->
+    <!--    </div>-->
+    <!--</div>-->
     <!-- Preloader End -->
 
     <!-- Main Wrapper Start -->
@@ -43,137 +43,156 @@
             {% if user.is_active %}
                 
             <header class="header">
-            <div class="header-inner fixed-header" style="background-color: #ffcccc;">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-xl-10 col-lg-9 col-3">
-                            <nav class="main-navigation">
-                                <div class="site-branding">
-                                    <a href="{% url 'shop-list' %}" class="logo">
-                                        <figure class="logo--transparent">
-                                            <img src="{% static "shop/assets/tes.png" %} " alt="Logo" style="width:70px">
-                                        </figure>
-                                        <figure class="logo--normal">
-                                            <img src="{% static "shop/assets/drw.png" %} " alt="Logo" style="width:100px">
-                                        </figure>
-                                    </a>
-                                </div>
-                                <div class="mainmenu-nav d-none d-lg-block">
-                                    <ul class="mainmenu">
-                                        <li class="mainmenu__item menu-item-has-children active">
-                                            <a href="{% url 'shop-list' %}" class="mainmenu__link">
-                                                <span class="mm-text">Home</span>
-                                            </a>
-                                        </li>
-                                        <li class="mainmenu__item menu-item-has-children">
-                                            <a href="{% url 'shop-showcart' %} " class="mainmenu__link">
-                                                <span class="mm-text">Shop</span>
-                                                <i class="flaticon flaticon-shopping-cart"></i>
-                                        <sup class="mini-cart-count">{{count_items}}</sup>
-                                            </a>
-                                            {% if count_items == 0 %}
-                                                
-                                            <ul class="megamenu">
-                                                <li>
-                                                    <a class="megamenu-title" href="{% url 'shop-showcart' %}">
-                                                        <span class="mm-text">Order</span>
-                                                    </a>
-                                                    <ul>
-                                                        <!-- <li>
-                                                            <a href="{% url 'shop-showcart' %}">
-                                                                <span class="mm-text">Order Detail</span>
-                                                            </a>
-                                                        </li> -->
-                                                        <li>
-                                                            <a href="{% url 'shop-transaction' %} ">
-                                                                <span class="mm-text">Transaction</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                            {% else %}
-                                            <ul class="megamenu">
-                                                <li>
-                                                    <a class="megamenu-title" href="{% url 'shop-showcart' %}">
-                                                        <span class="mm-text">Order</span>
-                                                    </a>
-                                                    <ul>
-                                                        <li>
-                                                            <a href="{% url 'shop-showcart' %}">
-                                                                <span class="mm-text">Order Detail</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="{% url 'shop-transaction' %} ">
-                                                                <span class="mm-text">Transaction</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
+                <div class="header-inner fixed-header">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-xl-10 col-lg-9 col-3">
+                                <nav class="main-navigation">
+                                    <div class="site-branding">
+                                        <a href="{% url 'shop-list' %}" class="logo">
+                                            <figure class="logo--transparent">
+                                                <img src="{% static "shop/assets/drw.png" %} " alt="Logo" style="width:70px">
+                                            </figure>
+                                            <figure class="logo--normal">
+                                                <img src="{% static "shop/assets/drw.png" %} " alt="Logo" style="width:100px">
+                                            </figure>
+                                        </a>
+                                    </div>
+                                    <div class="mainmenu-nav d-none d-lg-block">
+                                        <ul class="mainmenu">
+                                            <li class="mainmenu__item menu-item-has-children active">
+                                                <a href="{% url 'shop-list' %}" class="mainmenu__link">
+                                                    <span class="mm-text">Home</span>
+                                                </a>
+                                            </li>
+                                            <li class="mainmenu__item menu-item-has-children">
+                                                <a href="{% url 'shop-showcart' %} " class="mainmenu__link">
+                                                    <span class="mm-text">Shop</span>
+                                                    <i class="flaticon flaticon-shopping-cart"></i>
+                                            <sup class="mini-cart-count">{{count_items}}</sup>
+                                                </a>
+                                                {% if count_items == 0 %}
+                                                    
+                                                <ul class="megamenu">
+                                                    <li>
+                                                        <a class="megamenu-title" href="{% url 'shop-showcart' %}">
+                                                            <span class="mm-text">Order</span>
+                                                        </a>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{% url 'shop-transaction' %} ">
+                                                                    <span class="mm-text">Transaction</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                {% else %}
+                                                <ul class="megamenu">
+                                                    <li>
+                                                        <a class="megamenu-title" href="{% url 'shop-showcart' %}">
+                                                            <span class="mm-text">Order</span>
+                                                        </a>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{% url 'shop-showcart' %}">
+                                                                    <span class="mm-text">Order Detail</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'shop-transaction' %} ">
+                                                                    <span class="mm-text">Transaction</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                {% endif %}
+                                            </li>
+                                            {% if user.is_superuser %}
+                                            <li class="mainmenu__item menu-item-has-children">
+                                                <a href="{% url 'show_all-transaction' %}" class="mainmenu__link">
+                                                    <span class="mm-text">Lihat Semua Transaksi</span>
+                                                </a>
+                                            </li>
                                             {% endif %}
-                                            
-
-                                        </li>
-                                        <li class="mainmenu__item menu-item-has-children">
-                                            <a href="{% url 'show_product' %}" class="mainmenu__link">
-                                                <span class="mm-text">Products</span>
-                                            </a>
-                                        </li>
-                                        <li class="mainmenu__item">
-                                            <a href="{% url 'shop-member' %}" class="mainmenu__link">
-                                                <span class="mm-text">Join Member/Reseller</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </nav>
+                                            <li class="mainmenu__item menu-item-has-children">
+                                                <a href="{% url 'show_product' %}" class="mainmenu__link">
+                                                    <span class="mm-text">Products</span>
+                                                </a>
+                                            </li>
+                                            <li class="mainmenu__item menu-item-has-children">
+                                                <a href="" class="mainmenu__link">
+                                                    <span class="mm-text">Join Member/Reseller</span>
+                                                </a>
+                                                <ul class="megamenu">
+                                                    <li>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{% url 'shop-member' %}">
+                                                                    <span class="mm-text">Join Member</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="">
+                                                                    <span class="mm-text">Join Reseller</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="col-xl-2 col-lg-3 col-9 text-right">
+                                <ul class="header-toolbar">
+                                    <li class="header-toolbar__item user-info">
+                                        <a class="header-toolbar__btn">
+                                            <i class="flaticon flaticon-user"></i>
+                                        </a>
+                                        <ul class="user-info-menu">
+                                            <li>
+                                                <a href=""><i class="flaticon flaticon-user"></i><b> {{user.username}}</b></a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'shop-showcart' %}">Shopping Cart</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'logout' %}">Log Out</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="header-toolbar__item">
+                                        <a href="#searchForm" class="header-toolbar__btn toolbar-btn">
+                                            <i class="flaticon flaticon-search"></i>
+                                        </a>
+                                    </li>
+                                    <li class="header-toolbar__item d-lg-none">
+                                        <a href="#" class="header-toolbar__btn menu-btn">
+                                            <i class="fa fa-bars"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="col-xl-2 col-lg-3 col-9 text-right">
-                            <ul class="header-toolbar">
-                                <li class="header-toolbar__item user-info">
-                                    <a class="header-toolbar__btn">
-                                        <i class="flaticon flaticon-user"></i>
-                                    </a>
-                                    <ul class="user-info-menu">
-                                        <li>
-                                            <a href=""><i class="flaticon flaticon-user"></i><b> {{user.username}}</b></a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'shop-showcart' %}">Shopping Cart</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'logout' %}">Log Out</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="header-toolbar__item">
-                                    <a href="#searchForm" class="header-toolbar__btn toolbar-btn">
-                                        <i class="flaticon flaticon-search"></i>
-                                    </a>
-                                </li>
-                                <li class="header-toolbar__item d-lg-none">
-                                    <a href="#" class="header-toolbar__btn menu-btn">
-                                        <i class="fa fa-bars"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="mobile-menu"></div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mobile-menu"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
         {% endif %}
+
+
+
 
         {% else %}
         <header class="header">
-            <div class="header-inner fixed-header" style="background-color: #ffcccc;">
+            <div class="header-inner fixed-header">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-xl-10 col-lg-9 col-3">
@@ -240,11 +259,27 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li class="mainmenu__item">
-                                            <a href="{% url 'shop-member' %}" class="mainmenu__link">
-                                                <span class="mm-text">Join Member/Reseller</span>
-                                            </a>
-                                        </li>
+                                        <li class="mainmenu__item menu-item-has-children">
+                                                <a href="" class="mainmenu__link">
+                                                    <span class="mm-text">Join Member/Reseller</span>
+                                                </a>
+                                                <ul class="megamenu">
+                                                    <li>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{% url 'shop-member' %}">
+                                                                    <span class="mm-text">Join Member</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{% url 'shop-reseller' %}">
+                                                                    <span class="mm-text">Join Reseller</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
                                     </ul>
                                 </div>
                             </nav>
@@ -309,22 +344,22 @@
 
         <!-- Footer Start-->
         <footer class="footer">
-            <div class="footer-top bg-color ptb--50" data-bg-color="#ffcccc">
+            <div class="footer-top bg-color ptb--50" data-bg-color="#201D1F">
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-9 text-center">
                             <div class="footer-widget mb--50">
                                 <div class="textwidget">
-                                    <img src="{% static "shop/assets/drw.png" %} " alt="Logo" style="width: 150px">
+                                    <img src="{% static "shop/assets/drw.png" %} " alt="Logo" style="width: 200px">
                                 </div>
                             </div>
                             <div class="footer-widget mb--50 pb--1">
                                 <ul class="footer-menu">
-                                    <li><a href="">About Us</a></li>
-                                    <li><a href="">Terms &amp; Conditions</a></li>
-                                    <li><a href="">Policy</a></li>
-                                    <li><a href="">Help</a></li>
-                                    <li><a href="">Contact Us</a></li>
+                                    <li><a href="" style="color: white;">About Us</a></li>
+                                    <li><a href="" style="color: white;">Terms &amp; Conditions</a></li>
+                                    <li><a href="" style="color: white;">Policy</a></li>
+                                    <li><a href="" style="color: white;">Help</a></li>
+                                    <li><a href="" style="color: white;">Contact Us</a></li>
                                 </ul>
                             </div>
                             <div class="footer-widget">

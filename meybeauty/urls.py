@@ -26,6 +26,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 	path('', include('shop.urls')),
+    re_path(r'^accounts/',include('allauth.urls')),
+    path('adminpage/', include('adminpage.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('api-token-auth/', views.obtain_auth_token, name='api-token-auth'),
@@ -38,6 +40,9 @@ urlpatterns = [
     path('login/', users_views.login_view, name= 'login'),
     path('logout/', auth_views.LogoutView.as_view(template_name = 'users/login-register.html'), name='logout'),
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+

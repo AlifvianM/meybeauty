@@ -1,0 +1,41 @@
+{% extends "shop/index.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <table class="table table-bordered col-12 ">
+        <thead>
+            <tr class="align-items-center">
+                <th>KODE NOTA</th>
+                <th>NAMA PEMBELI</th>
+                <th>HARGA</th>
+                <th>JASA EKSPEDISI</th>
+                <th>WAKTU ORDER</th>
+                <th>STATUS BAYAR</th>
+                <th>HARGA</th>
+                <TH>HARGA ONGKIR</TH>
+                <TH>TOTAL HARGA</TH>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+              <tr class="align-items-center">
+                  <td><a href="{% url 'shop-orderdetail' order.id %}">{{order.kode_nota}}</a></td>
+                  <td>{{order.user.username}}</td>
+                  <td>{{order.harga}}</td>
+                  <td>{{order.jasa_ongkir}}</td>
+                  <td>{{order.created_at}}</td>
+                  <td>{{order.status_bayar}}</td>
+                  <td>Rp.{{order.harga}}</td>
+                  <td>Rp.{{order.harga_ongkir}}</td>
+                  <td>Rp.{{order.total_harga}}</td>
+                  
+              </tr>
+              {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+    
+       
+{% endblock content %}
