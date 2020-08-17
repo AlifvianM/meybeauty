@@ -1,5 +1,5 @@
 {% extends "shop/index.html" %}
-
+{% load socialaccount %}
 
 {% block content %}
      <!-- Breadcrumb area Start -->
@@ -43,7 +43,8 @@
                                     <div class="d-flex align-items-center mb--20">
                                         <div class="form__group mr--30">
                                             <input type="submit" value="Log in" class="btn btn-fullwidth btn-bg-red btn-color-white ml-2">
-                                            <a href="{% url 'facebook_login' %}" class="btn btn-fullwidth btn-bg-red btn-color-white ml-2 ">Login With Facebook</a>
+                                            <!-- <a href="{% url 'facebook_login' %}" class="btn btn-fullwidth btn-bg-red btn-color-white ml-2 ">Login With Facebook</a> -->
+                                            <a href="{% provider_login_url 'google' %}" class="btn btn-fullwidth btn-bg-red btn-color-white ml-2 ">Login With Google</a>
                                         </div>
                                         <div class="form__group">
                                         </div>
