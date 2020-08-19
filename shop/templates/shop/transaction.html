@@ -1,5 +1,5 @@
 {% extends "shop/index.html" %}
-
+{% load humanize %}
 {% block content %}
 
 <div class="container-fluid">
@@ -25,9 +25,9 @@
                   <td>{{order.jasa_ongkir}}</td>
                   <td>{{order.created_at}}</td>
                   <td>{{order.status_bayar}}</td>
-                  <td>Rp.{{order.harga}}</td>
-                  <td>Rp.{{order.harga_ongkir}}</td>
-                  <td>Rp.{{order.total_harga}}</td>
+                  <td>Rp.{{order.harga|intcomma}}</td>
+                  <td>Rp.{{order.harga_ongkir|intcomma}}</td>
+                  <td>Rp.{{order.total_harga|intcomma}}</td>
                   
               </tr>
               {% endfor %}

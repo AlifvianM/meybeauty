@@ -1,4 +1,6 @@
 {% extends "shop/index.html" %}
+{% load humanize %}
+
 
 {% block content %}
  <div class="breadcrumb-area bg-color ptb--90" data-bg-color="#f6f6f6">
@@ -130,6 +132,8 @@
                                 </form>
                             </div>
                         </div>
+                        
+
                         <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
                             <div class="order-details">
                                 <div class="checkout-title mt--10">
@@ -140,7 +144,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Product</th>
-                                                <th class="">Total</th>
+                                                <th class="text-right">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -150,10 +154,7 @@
                                                         <th>{{item.product.nama}} 
                                                             <strong><span>&#10005;</span>{{item.quantity}}</strong>
                                                         </th>
-                                                        <th>
-                                                            {{item.weight}}
-                                                        </th>
-                                                        <td>Rp.{{item.total_harga}}</td>
+                                                        <td class="text-right">Rp.{{item.total_harga|intcomma}}</td>
                                                     </tr>
                                                 {% endfor %}
                                             
@@ -165,62 +166,65 @@
                                             </tr> -->
                                             <tr class="">
                                                 <th>Subtotal</th>
-                                                <td class="">Rp.{{total}}</td>
+                                                <td class="">Rp.{{total|intcomma}}</td>
                                             </tr>
-                                           <!--  <tr class="shipping">
-                                                <th>Shipping</th>
-                                                <td class="text-right">
-                                                    <span>Flat Rate; $20.00</span>
-                                                </td>
-                                            </tr>
-                                            <tr class="order-total">
-                                                <th>Order Total</th>
-                                                <td class="text-right"><span class="order-total-ammount">$56.00</span></td>
-                                            </tr> -->
                                         </tfoot>
                                     </table>
                                 </div>
-                                <div class="checkout-payment">
-                                    <!-- <form action="#" class="payment-form">
-                                        <div class="payment-group mb--10">
-                                            <div class="payment-radio">
-                                                <input type="radio" value="bank" name="payment-method" id="bank" checked>
-                                                <label class="payment-label" for="cheque">Direct Bank Transfer</label>
-                                            </div>
-                                            <div class="payment-info" data-method="bank">
-                                                <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-                                            </div>
-                                        </div>
-                                        <div class="payment-group mb--10">
-                                            <div class="payment-radio">
-                                                <input type="radio" value="cheque" name="payment-method" id="cheque">
-                                                <label class="payment-label" for="cheque">
-                                                    cheque payments
-                                                </label>
-                                            </div>
-                                            <div class="payment-info cheque hide-in-default" data-method="cheque">
-                                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                                            </div>
-                                        </div>
-                                        <div class="payment-group mb--10">
-                                            <div class="payment-radio">
-                                                <input type="radio" value="cash" name="payment-method" id="cash">
-                                                <label class="payment-label" for="cash">
-                                                    CASH ON DELIVERY
-                                                </label>
-                                            </div>
-                                            <div class="payment-info cash hide-in-default" data-method="cash">
-                                                <p>Pay with cash upon delivery.</p>
-                                            </div>
-                                        </div>
-                                        <div class="payment-group mt--20">
-                                            <p class="mb--15">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
-                                            <button type="submit" class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2">Place Order</button>
-                                        </div>
-                                    </form> -->
-                                </div>
                             </div>
                         </div>
+
+                        <!-- <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
+                            <div class="order-details">
+                                <div class="checkout-title mt--10">
+                                    <h2>Your Order</h2>
+                                </div>
+                                <div class="table-content table-responsive mb--30">
+                                    <table class="table order-table order-table-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th class="text-right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                                {% for item in items %}
+                                                    <tr>
+                                                        <th>{{item.product.nama}} 
+                                                            <strong><span>&#10005;</span>{{item.quantity}}</strong>
+                                                        </th>
+                                                        <td class="text-right">Rp.{{item.total_harga}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="cart-subtotal">
+                                                <th>Berat Total</th>
+                                                <td class="text-right">{{orders.berat}}gr</td>
+                                            </tr>
+                                            <tr class="cart-subtotal">
+                                                <th>Harga Ongkir</th>
+                                                <td class="text-right">Rp.{{orders.harga_ongkir}}</td>
+                                            </tr>
+                                            <tr class="cart-subtotal">
+                                                <th>Total</th>
+                                                <td class="text-right">Rp.{{orders.total_harga}}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    {% if orders.status_order == False %}
+                                        <form method="POST" action="{% url 'shop-bayar' orders.pk %}">
+                                            {% csrf_token %}
+                                            <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                    
+                                        </form>
+                                    {% endif %}
+                                   
+                                </div>
+                                
+                            </div>
+                        </div> -->
                         <!-- Checkout Area End -->
                     </div>
                 </div>

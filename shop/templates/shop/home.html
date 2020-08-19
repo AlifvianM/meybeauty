@@ -1,4 +1,6 @@
 {% extends "shop/index.html" %}
+{% load humanize %}
+
 
 {% block content %}
 
@@ -117,7 +119,7 @@
                                                     <a href="{% url 'shop-detail' product.slug %}">{{product.nama}}</a>
                                                 </h3>
                                                 <div class="product-price-wrapper mb--30">
-                                                    <span class="money">Rp. {{product.harga}}</span>
+                                                    <span class="money">Rp. {{product.harga|intcomma}}</span>
                                                     
                                                 </div>
                                                 <a href="{% url 'shop-addcart' product.id %}" class="btn btn-small btn-bg-sand btn-color-dark">Add To Cart</a>

@@ -1,4 +1,6 @@
 {% extends "shop/index.html" %}
+{% load humanize %}
+
 
 {% block content %}
 <div class="main-content-wrapper">
@@ -95,7 +97,7 @@
                                                         <th>{{item.product.nama}} 
                                                             <strong><span>&#10005;</span>{{item.quantity}}</strong>
                                                         </th>
-                                                        <td class="text-right">Rp.{{item.total_harga}}</td>
+                                                        <td class="text-right">Rp.{{item.total_harga|intcomma}}</td>
                                                     </tr>
                                                 {% endfor %}
                                             
@@ -107,11 +109,11 @@
                                             </tr>
                                             <tr class="cart-subtotal">
                                                 <th>Harga Ongkir</th>
-                                                <td class="text-right">Rp.{{orders.harga_ongkir}}</td>
+                                                <td class="text-right">Rp.{{orders.harga_ongkir|intcomma}}</td>
                                             </tr>
                                             <tr class="cart-subtotal">
                                                 <th>Total</th>
-                                                <td class="text-right">Rp.{{orders.total_harga}}</td>
+                                                <td class="text-right">Rp.{{orders.total_harga|intcomma}}</td>
                                             </tr>
                                         </tfoot>
                                     </table>

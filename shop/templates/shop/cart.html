@@ -1,4 +1,6 @@
 {% extends "shop/index.html" %}
+{% load humanize %}
+
 
 {% block content %}
 
@@ -20,8 +22,8 @@
                                                         <th>&nbsp;</th>
                                                         <th>&nbsp;</th>
                                                         <th class="text-left">Product</th>
-                                                        <th>price</th>
-                                                        <th>quantity</th>
+                                                        <th>Harga</th>
+                                                        <th>Jumlah</th>
                                                         <!-- <th>total</th> -->
                                                     </tr>
                                                 </thead>
@@ -41,7 +43,7 @@
                                                         </td>
                                                         <td class="product-price">
                                                             <span class="product-price-wrapper">
-                                                                <span class="money">Rp.{{item.price}}</span>
+                                                                <span class="money">Rp.{{item.price|intcomma}}</span>
                                                             </span>
                                                         </td>
                                                         <td class="product-quantity">

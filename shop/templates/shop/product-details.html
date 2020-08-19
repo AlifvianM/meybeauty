@@ -1,5 +1,7 @@
 {% extends "shop/index.html" %}
 {% load static %}
+{% load humanize %}
+
 
 {% block content %}
     
@@ -131,7 +133,7 @@
 <!--                                <h3 class="product-title mb--20">Black Blazer</h3>-->
                                 <strong>{{obj.nama}}</strong>
                                 <div class="product-price-wrapper mb--25">
-                                    <span class="money">Rp.{{obj.harga}}</span>
+                                    <span class="money">Rp.{{obj.harga|intcomma}}</span>
                                     <!-- <span class="price-separator">-</span> -->
                                     <!-- <span class="money">$400.00</span> -->
                                 </div>
@@ -360,7 +362,7 @@
                                                     <a href="{% url 'shop-detail' p.slug %}">{{p.nama}}</a>
                                                 </h3>
                                                 <div class="product-price-wrapper mb--30">
-                                                    <span class="money">Rp.{{p.harga}}</span>
+                                                    <span class="money">Rp.{{p.harga|intcomma}}</span>
                                                 </div>
                                                 <a href="{% url 'shop-addcart' p.id %}" class="btn btn-small btn-bg-sand btn-color-dark">Add To Cart</a>
                                             </div>
