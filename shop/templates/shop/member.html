@@ -35,16 +35,23 @@
                                 <div class="checkout-title mt--10">
                                     <h2>Persyaratan {{title}}</h2>
                                 </div>
-                                <ul>
-                                    <li>1. Sudah pakai drw skincare 3 bulan </li>
-                                    <li>2. Belanja awal reseller 1 juta  </li>
-                                    <li>3. Belanja Rutin tiap bulan 750.000 (ga sulit jualan 3 paket krim aja)</li>
-                                    <li>4. Reseller bisa rekrut resler (jadi rekrutan ini utk diberikan kepada Member selanjutnya dihitung sebagai syarat naik menjadi member)</li>
-                                </ul>
-                                
+                                {% if title == 'Join Reseller' %}
+                                    <ul>
+                                        <li>1. Sudah pakai drw skincare 3 bulan </li>
+                                        <li>2. Belanja awal reseller 1 juta  </li>
+                                        <li>3. Belanja Rutin tiap bulan 750.000 (ga sulit jualan 3 paket krim aja)</li>
+                                        <li>4. Reseller bisa rekrut resler (jadi rekrutan ini utk diberikan kepada Member selanjutnya dihitung sebagai syarat naik menjadi member)</li>
+                                    </ul>
+                                    {% else %}
+                                    <ul>
+                                        <li>1. Reseller dulu selama 6 bulan </li>
+                                        <li>2. Menggantikan 2 pasien utk menjadi reseller baru </li>
+                                        <li>3. Reseller baru pengganti wajib aktif 12 bulan jika ditemukan tidak aktif ditengah jalan maka mantan member wajib mencarikan resller baru yg aktif. Hal ini harus menjadi komitmen bersama krm Kita disini adl saling memaukseskan satu sama lain.</li>
+                                        <li>4. Belanja Rutin tiap bulan minimal 1 jt (ga sulit cukup jualan 5 paket krim tiap bulan)</li>
+                                    </ul>
+                                {% endif %}
                             </div>
                         </div>
-                        <!-- Checkout Area End -->
                     </div>
                 </div>
             </div>

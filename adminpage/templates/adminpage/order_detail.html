@@ -1,5 +1,5 @@
 {% extends "adminpage/index.html" %}
-
+{% load humanize %}
 
 
 
@@ -24,15 +24,15 @@
 			</tr>
 			<tr>
 				<th>Harga Pemesanan</th>
-				<td>Rp.{{order.harga}}</td>
+				<td>Rp.{{order.harga|intcomma}}</td>
 			</tr>
 			<tr>
 				<th>Harga Ongkir</th>
-				<td>Rp.{{order.harga_ongkir}}</td>
+				<td>Rp.{{order.harga_ongkir|intcomma}}</td>
 			</tr>
 			<tr>
 				<th>Total</th>
-				<td>Rp.{{order.total_harga}}</td>
+				<td>Rp.{{order.total_harga|intcomma}}</td>
 			</tr>
 			<tr>
 				<th>Status Order</th>

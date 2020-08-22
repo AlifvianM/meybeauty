@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from shop.models import Order, Product, Reseller, Member
 from django.shortcuts import get_object_or_404
-from .forms import OrderForm, ProductForm
+from .forms import OrderForm, ProductForm, MemberForm
 from django.urls import reverse, reverse_lazy
 from django.db.models import Avg, Sum, Count
+from django.contrib import messages
 
 from datetime import date
 from django.template.loader import render_to_string
@@ -104,7 +105,7 @@ def add_product(request):
 		print(form.is_valid())
 		if form.is_valid():
 			form.save()
-			return redirect(reverse('adminpage-index'))
+			return redirect(reverse('adminpage-list_product'))
 		else:
 			# return redirect(reverse('adminpage-product'))
 			return HttpResponse("SALAH")
@@ -126,6 +127,20 @@ def list_product(request):
 	}
 	return render(request, 'adminpage/listproduct.html', context)
 
+
+@login_required
+def delete_product(request, pk):
+	if request.user.is_superuser:
+		product = Product.objects.filter(pk = pk)
+		if product.exists():
+			product.delete()
+			messages.info(request, 'Item Has Been Deleted')
+			return redirect(reverse('adminpage-list_product'))
+		else:
+			messages.danger(request, 'Item Cant Be Deleted')
+			return redirect(reverse('adminpage-list_product'))
+	else:
+		return redirect(reverse('adminpage-index'))
 
 
 def order_detail(request, kode_nota):
@@ -157,10 +172,24 @@ def list_member(request):
 		return redirect('shop-index')
 	return render(request, 'adminpage/listmember.html', context)
 
-
-
-
-
+@login_required
+def updatemember(request, pk):
+	member = get_object_or_404(Member, pk=pk)
+	if request.POST:
+		form = MemberForm(request.POST, instance=member)
+		print(form)
+		if form.is_valid():
+			form.save()
+			return redirect(reverse('adminpage-list_member'))
+		else:
+			return HttpResponse("DATA SALAH")
+	else:
+		form = MemberForm()
+	context = {
+		'form':form,
+		'title':'Update Member'
+	}
+	return render(request, 'adminpage/updatemember.html', context)
 
 
 

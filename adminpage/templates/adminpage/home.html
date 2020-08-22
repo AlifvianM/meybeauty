@@ -1,5 +1,5 @@
 {% extends "adminpage/index.html" %}
-
+{% load humanize %}
 
 {% block inforow %}
   <div class="row">
@@ -11,7 +11,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Pemasukan</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">Rp.{{total_harga}}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Rp.{{total_harga|intcomma}}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -28,7 +28,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Pembayaran Pending</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">Rp.{{total_pending}}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Rp.{{total_pending|intcomma}}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -129,9 +129,9 @@
                         <td>{{order.kode_nota}}</td>
                         <td>{{order.user.username}}</td>
                         <td>{{order.status_order}}</td>
-                        <td>Rp.{{order.harga}}</td>
-                        <td>Rp.{{order.harga_ongkir}}</td>
-                        <td>Rp.{{order.total_harga}}</td>
+                        <td>Rp.{{order.harga|intcomma}}</td>
+                        <td>Rp.{{order.harga_ongkir|intcomma}}</td>
+                        <td>Rp.{{order.total_harga|intcomma}}</td>
                         <td>{{order.alamat}}</td>
                         <td>{{order.resi}}</td>
                         <td><a class="btn btn-primary" href="{% url 'adminpage-resi' order.kode_nota %}">Tambah Resi</a></td>

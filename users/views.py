@@ -13,6 +13,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -107,7 +108,7 @@ def signup(request):
             send_mail(
                 subject = mail_subject,
                 message = message,
-                from_email = 'printdisini2020@gmail.com',
+                from_email = settings.EMAIL_HOST_USER,
                 recipient_list = [to_email],
                 fail_silently = False,
             )

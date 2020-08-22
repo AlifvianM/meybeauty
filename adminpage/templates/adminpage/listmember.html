@@ -16,6 +16,7 @@
                       <th>Nomor Telepon</th>
                       <th>Tanggal Ditambah</th>
                       <th>is_confirm</th>
+                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -26,7 +27,8 @@
 	                    <td>{{member.nama}}</td>
 	                    <td>{{member.nomor_telepon}}</td>
                       <td>{{member.created_at}}</td>
-                      <td>{{member.is_confirmed}}</td>
+                      <td>{{member.is_confirm}}</td>
+                      <td><a class="btn btn-primary" href="{% url 'adminpage-memberupdate' member.pk %}">Update</a></td>
                     </tr>
                     {% endfor %}
                   </tbody>

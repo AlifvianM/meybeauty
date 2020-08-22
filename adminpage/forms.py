@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import Order, Product
+from shop.models import Order, Product, Member
 
 
 class OrderForm(forms.ModelForm):
@@ -76,5 +76,12 @@ class ProductForm(forms.ModelForm):
         	'foto',
         	'desc',
         	'berat',
+        	)
+
+class MemberForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = (
+        	'is_confirm',
         	)
     

@@ -17,6 +17,7 @@
                       <th>Harga</th>
                       <th>Berat</th>
                       <th>Tanggal Ditambah</th>
+                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -28,6 +29,7 @@
 	                    <td>Rp.{{product.harga}}</td>
 	                    <td>{{product.berat}} gr</td>
 	                    <td>{{product.created_at}}</td>
+                      <td><a class="btn btn-danger" href="{% url 'adminpage-delete_product' product.pk %}">Delete</a></td>
                     </tr>
                     {% endfor %}
                   </tbody>

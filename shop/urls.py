@@ -60,8 +60,9 @@ urlpatterns= [
 	path('delete_from_cart/<int:pk>', OrderItemDeleteView.as_view(), name='shop-deletecart'),
 	path('add-to-cart/<int:pk>', add_to_cart, name='shop-addcart'),
 	path('detail/<slug:slug>', product_detail, name='shop-detail'),
-	path('dashboard', product_list, name = 'shop-list'),
 	path('products', show_product, name = 'show_product'),
 	path('product', show_product_home, name = 'show_product_home'),
-	path('', dashboard, name = 'shop-dashboard'),
+	# path('', dashboard, name = 'shop-dashboard'),
+	path('', product_list, name = 'shop-list'),
+
 ]

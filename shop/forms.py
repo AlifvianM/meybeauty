@@ -146,7 +146,6 @@ class ResellerForm(forms.ModelForm):
             widget=forms.TextInput(
                     attrs={
                         'class':'form__input form__input--2',
-                        'placeholder':'Masukkan Nama Anda..'
                     }
                 )
         )
@@ -154,7 +153,6 @@ class ResellerForm(forms.ModelForm):
             widget=forms.EmailInput(
                     attrs={
                         'class':'form__input form__input--2',
-                        'placeholder':'Masukkan Email Anda..'
                     }
                 )
         )
@@ -162,7 +160,6 @@ class ResellerForm(forms.ModelForm):
             widget=forms.NumberInput(
                     attrs={
                         'class':'form__input form__input--2',
-                        'placeholder':'Masukkan Nomor Handphone/Whatsapp Anda..'
                     }
                 ), label='Nomor HP / Whatsapp'
         )
@@ -170,7 +167,6 @@ class ResellerForm(forms.ModelForm):
             widget=forms.Textarea(
                     attrs={
                         'class':'form__input',
-                        'placeholder':'Masukkan Alasan Anda..'
                     }
                 )
         )
