@@ -20,7 +20,7 @@
         <tbody>
             {% for order in orders %}
               <tr class="align-items-center">
-                  <td><a href="{% url 'shop-orderdetail' order.id %}">{{order.kode_nota}}</a></td>
+                  <td><a href="{% url 'shop-orderdetail' order.kode_nota %}">{{order.kode_nota}}</a></td>
                   <td>{{order.user.username}}</td>
                   <td>{{order.jasa_ongkir}}</td>
                   <td>{{order.created_at}}</td>

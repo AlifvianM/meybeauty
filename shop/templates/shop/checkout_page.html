@@ -3,8 +3,8 @@
 
 
 {% block content %}
- <div class="breadcrumb-area bg-color ptb--90" data-bg-color="#f6f6f6">
-            <div class="container">
+<div class="breadcrumb-area bg-color ptb--90" data-bg-color="#f6f6f6">
+    <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="d-flex justify-content-between align-items-center flex-sm-row flex-column">
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+</div>
 
 	
 <div class="main-content-wrapper">
@@ -59,7 +59,7 @@
                                         <div class="form__group col-12">
                                             <label for="prov_tujuan" class="form__label form__label--2">Provinsi Tujuan <span class="required">*</span></label>
                                             <select id="prov_tujuan" name="provinsi_tujuan" class="form__input form__input--2 nice-select">
-											
+											<option>Pilih Provinsi Anda...</option>
                                             	{% for s in provinces.values %}
 													{% for t in s.results %}
 														<option value="{{t.province_id}}">{{t.province}}</option>
@@ -74,7 +74,7 @@
                                         <div id="kota_tujuan" class="form__group col-12">
                                             <label for="kota_tujuan" class="form__label form__label--2">Kota Tujuan <span class="required">*</span></label>
                                             <select id="kota_tujuan" name="kota_tujuan" class="form__input form__input--2 nice-select">
-											
+											<option>Pilih Kota/Kabupaten...</option>
                                             	
 											</select>
                                         </div>
@@ -84,6 +84,7 @@
 	                                    <div id="kecamatan_tujuan" class="form__group col-12">
 											<label for="kecamatan_tujuan" class="form__label form__label--2">Kecamatan Tujuan</label>
 											<select id="kecamatan_tujuan" name="kecamatan_tujuan" class="form__input form__input--2 nice-select">
+                                            <option>Pilih Kecamatan...</option>
 												
 											</select>
 										</div>
@@ -92,7 +93,7 @@
                                     <div class="form-row mb--20">
                                         <div id="kecamatan_tujuan" class="form__group col-12">
                                             <label for="alamat" class="form__label form__label--2">Alamat</label>
-                                            <input class="form__input form__input--2" type="text" name="alamat" placeholder="Masukkan Alamat Anda..">
+                                            <input class="form__input form__input--2" type="text" name="alamat" placeholder="Masukkan Alamat Anda Beserta Kode Pos..">
                                         </div>
                                     </div>
 
@@ -125,11 +126,7 @@
 													</select>
 										</div>
 									</div>
-
-
-
 									<button class="btn btn-primary" type="submit">LANJUT</button>
-									<!-- {{form}} -->
                                 </form>
                             </div>
                         </div>
@@ -167,65 +164,13 @@
                                             </tr> -->
                                             <tr class="">
                                                 <th>Subtotal</th>
-                                                <td class="">Rp.{{total|intcomma}}</td>
+                                                <td class="text-right">Rp.{{total|intcomma}}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
-                            <div class="order-details">
-                                <div class="checkout-title mt--10">
-                                    <h2>Your Order</h2>
-                                </div>
-                                <div class="table-content table-responsive mb--30">
-                                    <table class="table order-table order-table-2">
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th class="text-right">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                                {% for item in items %}
-                                                    <tr>
-                                                        <th>{{item.product.nama}} 
-                                                            <strong><span>&#10005;</span>{{item.quantity}}</strong>
-                                                        </th>
-                                                        <td class="text-right">Rp.{{item.total_harga}}</td>
-                                                    </tr>
-                                                {% endfor %}
-                                            
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="cart-subtotal">
-                                                <th>Berat Total</th>
-                                                <td class="text-right">{{orders.berat}}gr</td>
-                                            </tr>
-                                            <tr class="cart-subtotal">
-                                                <th>Harga Ongkir</th>
-                                                <td class="text-right">Rp.{{orders.harga_ongkir}}</td>
-                                            </tr>
-                                            <tr class="cart-subtotal">
-                                                <th>Total</th>
-                                                <td class="text-right">Rp.{{orders.total_harga}}</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                    {% if orders.status_order == False %}
-                                        <form method="POST" action="{% url 'shop-bayar' orders.pk %}">
-                                            {% csrf_token %}
-                                            <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                    
-                                        </form>
-                                    {% endif %}
-                                   
-                                </div>
-                                
-                            </div>
-                        </div> -->
                         <!-- Checkout Area End -->
                     </div>
                 </div>
@@ -234,6 +179,33 @@
 
 
 
+<script type="text/javascript">       
+        $(document).ready(function(){
+          $("#prov").change(function(){
+            prov_id = $("#prov :selected").val();
+                $("#kota").load("/cek_kota/" + prov_id);
 
+          });
+          $("#prov_tujuan").change(function(){
+            prov_tujuan_id = $("#prov_tujuan :selected").val();
+                $("#kota_tujuan").load("/cek_kota_tujuan/" + prov_tujuan_id);
+
+          });
+
+          $("#kota_tujuan").change(function(){
+            kota_tujuan_id = $("#kota_tujuan :selected").val();
+                $("#kecamatan_tujuan").load("/cek_kecamatan_tujuan/" + kota_tujuan_id);
+
+          });
+
+          $("#submit").click(function(){
+            kota_id = $("#kota").val();
+            kecamatan_tujuan_id = $("#kecamatan_tujuan :selected").val();
+            berat = $("#berat").val();
+            jasa_ongkir = $("#ongkir :selected").val();
+                $("#service").load("/cek_ongkir/" + kota_id + "/" + kecamatan_tujuan_id + "/" + berat + "/" +jasa_ongkir);
+          });
+        });
+</script>
 
 {% endblock content %}

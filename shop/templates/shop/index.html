@@ -399,11 +399,10 @@
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-sm-6 text-sm-left text-center mb-xs--10">
-                            <!-- <p class="copyright-text"><a href="">DRWSkincare Banyuwangi</a> &copy; 2019 all rights reserved</p> -->
                         </div>
                         <div class="col-sm-6 text-sm-right text-center">
                             <figure>
-                                
+                                <p class="copyright-text text-right"><a href="">DRWSkincare Banyuwangi</a> &copy; 2019 all rights reserved</p>
                             </figure>
                         </div>
                     </div>
@@ -618,46 +617,7 @@
         <!-- Qicuk View Modal End -->
     </div>
     <!-- Main Wrapper End -->
-         <script type="text/javascript">
-        // function test(){
-
-        // }
-        $(document).ready(function(){
-          $("#prov").change(function(){
-            prov_id = $("#prov :selected").val();
-                $("#kota").load("/cek_kota/" + prov_id);
-
-          });
-          $("#prov_tujuan").change(function(){
-            prov_tujuan_id = $("#prov_tujuan :selected").val();
-                $("#kota_tujuan").load("/cek_kota_tujuan/" + prov_tujuan_id);
-
-          });
-
-          $("#kota_tujuan").change(function(){
-            kota_tujuan_id = $("#kota_tujuan :selected").val();
-                $("#kecamatan_tujuan").load("/cek_kecamatan_tujuan/" + kota_tujuan_id);
-
-          });
-
-          $("#submit").click(function(){
-            kota_id = $("#kota").val();
-            kecamatan_tujuan_id = $("#kecamatan_tujuan :selected").val();
-            berat = $("#berat").val();
-            jasa_ongkir = $("#ongkir :selected").val();
-                $("#service").load("/cek_ongkir/" + kota_id + "/" + kecamatan_tujuan_id + "/" + berat + "/" +jasa_ongkir);
-          });
-
-         //  $("#ongkir").change(function(){
-            
-            // jasa_ongkir = $("#ongkir :selected").val();
-   //           $("#service").load("/cek_ongkir/" + kota_id + "/" + kecamatan_tujuan_id + "/" + berat + "/" +jasa_ongkir);
-         //  });
-
-
-        });
-        
-    </script>
+    
 
     <!-- ************************* JS Files ************************* -->
 

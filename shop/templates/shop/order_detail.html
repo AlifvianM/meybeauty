@@ -47,14 +47,10 @@
 											<th>Jasa Ongkir</th>
 											<td>{{orders.jasa_ongkir}}</td>
 										</tr>
-                                        {% if orders.status_order == True %}
-                                            <tr class="cart-subtotal">
-                                                <th>Resi</th>
-                                                <!-- <td class="text-right">{{orders.resi}}</td> -->
-                                                <td>{{orders.resi}}</td>
-
-                                            </tr>
-                                            {% endif %}
+                                        <tr class="cart-subtotal">
+                                            <th>Resi</th>
+                                            <td>{{orders.resi}}</td>
+                                        </tr>
                                         <tr>
                                             <tr class="cart-subtotal">
                                                 <th>Keterangan Ongkir</th>
@@ -91,7 +87,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                                 {% for item in items %}
                                                     <tr>
                                                         <th>{{item.product.nama}} 
@@ -100,7 +95,6 @@
                                                         <td class="text-right">Rp.{{item.total_harga|intcomma}}</td>
                                                     </tr>
                                                 {% endfor %}
-                                            
                                         </tbody>
                                         <tfoot>
                                             <tr class="cart-subtotal">
@@ -117,7 +111,7 @@
                                             </tr>
                                         </tfoot>
                                     </table>
-                                    {% if orders.status_order == False %}
+                                    {% if orders.status_bayar == 'BELUM' %}
 	                                    <form method="POST" action="{% url 'shop-bayar' orders.pk %}">
 	                                    	{% csrf_token %}
 		                                    <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                	

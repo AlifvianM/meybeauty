@@ -152,7 +152,7 @@ $(".qtycus{{forloop.counter}}").append('<div class="dec{{forloop.counter}} qtybu
                                                 <div class="shipping-calculator-wrap">
                                                     <!-- <a href="#shipping_calculator" class="expand-btn">Calculate Shipping</a> -->
 
-                                                    <form class="cart-form" action="{% url 'shop-checkout' order.id %}" method="POST">
+                                                    <form class="cart-form" action="{% url 'shop-checkout' order.kode_nota %}" method="POST">
                                                         {% csrf_token %}
                                                 </div>
                                             </div>

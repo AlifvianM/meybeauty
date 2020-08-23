@@ -72,8 +72,6 @@ def cek_kota_tujuan(request, prov_tujuan_id):
 	r = requests.get(url, headers)
 	kota = r.json()
 
-	print(json.dumps(kota, indent=2))
-
 	context = {
 		'city':kota,
 
@@ -83,7 +81,6 @@ def cek_kota_tujuan(request, prov_tujuan_id):
 def cek_kota(request, prov_id):
 	prov_id = prov_id
 	url = "https://pro.rajaongkir.com/api/city?province=" + prov_id
-	print(url)
 	headers = { 'key': settings.API_KEY_SECRET }
 	r = requests.get(url, headers)
 	kota = r.json()
@@ -252,8 +249,8 @@ class OrderUpdateView(UpdateView):
 
 
 @login_required
-def orderupdate(request, pk):
-	order = get_object_or_404(Order, pk=pk)
+def orderupdate(request, kode_nota):
+	order = get_object_or_404(Order, kode_nota=kode_nota)
 	form = OrderUpdateForm(request.POST or None, instance = order)
 	url = "https://pro.rajaongkir.com/api/province"
 	headers = { 'key': settings.API_KEY_SECRET }
@@ -269,7 +266,7 @@ def orderupdate(request, pk):
 	if form.is_valid():
 		orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
 		order.total_harga = order.harga + order.harga_ongkir
-		# order.status_order = True
+		order.status_order = True
 		order.save()
 		form.save()
 		user = request.user
@@ -293,7 +290,7 @@ def orderupdate(request, pk):
 		    fail_silently = False,
 		)
 			# return redirect(reverse('shop-list'))
-		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
+		return redirect(reverse('shop-orderdetail', kwargs={'kode_nota':kode_nota}))
 
 	context = {
 		'order':order,
@@ -316,15 +313,9 @@ class OrderBayarUpdateView(UpdateView):
 		context['users'] = self.request.user
 		context['bayar'] = Order.objects.filter(user = self.request.user, status_order = False)
 		obj = super(OrderBayarUpdateView, self).get_object(queryset = context['bayar'])
-		print("obj = ", obj)
-		print(obj.bukti_pembayaran)
 		if obj.bukti_pembayaran:
 			obj.status_order = True
-			print(obj.status_order)
-			obj.save()
-			print(obj.status_order)
-
-		
+			obj.save()		
 		return context
 
 	# def form_valid(self, form):
@@ -388,7 +379,7 @@ class OrderItemUpdateView(UpdateView):
 
 @login_required
 def transaction(request):
-	order = Order.objects.filter( user = request.user).order_by('-created_at')
+	order = Order.objects.filter( user = request.user, status_order=True).order_by('-created_at')
 	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	context = {
 		'orders':order,
@@ -401,7 +392,6 @@ def OrderBayarUpdate(request, pk):
 	order = get_object_or_404(Order, pk=pk)
 	form = OrderBayarForm(request.POST, request.FILES, instance = order)
 	form.kode_nota = order.kode_nota
-	print(form.kode_nota)
 	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
 	orders = Order.objects.filter(pk = pk, user = request.user)
 	if form.is_valid():
@@ -432,8 +422,9 @@ def OrderBayarUpdate(request, pk):
 	return render(request, 'shop/bayar.html', context)
 
 @login_required
-def orderdetail(request, pk):
-	order = get_object_or_404(Order, pk=pk)
+def orderdetail(request, kode_nota):
+	order = get_object_or_404(Order, kode_nota=kode_nota)
+	
 	kota_id = order.kota_asal
 	kecamatan_tujuan_id = order.kecamatan_tujuan
 	berat = order.berat
@@ -442,7 +433,7 @@ def orderdetail(request, pk):
 	payload = "origin=" + kota_id + "&originType=city&destination=" + kecamatan_tujuan_id + "&destinationType=subdistrict&weight=" + str(berat) + "&courier=" + jasa_ongkir
 	r = requests.post(url,payload, headers = { 'key': settings.API_KEY_SECRET, 'content-type': "application/x-www-form-urlencoded" })
 	ongkir = r.json()
-	
+		
 	waybill_url = "https://pro.rajaongkir.com/api/waybill"
 	waybill_payload = "waybill="+order.resi+"&courier="+order.jasa_ongkir
 	waybill_r = requests.post(waybill_url,waybill_payload, headers = { 'key': settings.API_KEY_SECRET, 'content-type': "application/x-www-form-urlencoded" })
@@ -451,16 +442,15 @@ def orderdetail(request, pk):
 	orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
 	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	
-
-
-
+	orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
+	count_items = OrderItem.objects.filter(order__user = request.user, order__status_order = False).aggregate(Count('id'))['id__count'] or 0
 	context = {
-		'orders':order,
-		'items':orderitem,
-		'count_items':count_items,
-		'ongkir':ongkir,
-		'waybill':waybill,
-	}
+			'orders':order,
+			'items':orderitem,
+			'count_items':count_items,
+			'ongkir':ongkir,
+			'waybill':waybill,
+		}
 	return render(request, 'shop/order_detail.html', context)
 
 # @login_required
