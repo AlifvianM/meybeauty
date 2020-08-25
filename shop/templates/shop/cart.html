@@ -1,6 +1,4 @@
 {% extends "shop/index.html" %}
-{% load humanize %}
-
 
 {% block content %}
 
@@ -22,8 +20,8 @@
                                                         <th>&nbsp;</th>
                                                         <th>&nbsp;</th>
                                                         <th class="text-left">Product</th>
-                                                        <th>Harga</th>
-                                                        <th>Jumlah</th>
+                                                        <th>price</th>
+                                                        <th>quantity</th>
                                                         <!-- <th>total</th> -->
                                                     </tr>
                                                 </thead>
@@ -43,7 +41,7 @@
                                                         </td>
                                                         <td class="product-price">
                                                             <span class="product-price-wrapper">
-                                                                <span class="money">Rp.{{item.price|intcomma}}</span>
+                                                                <span class="money">Rp.{{item.price}}</span>
                                                             </span>
                                                         </td>
                                                         <td class="product-quantity">
@@ -152,7 +150,7 @@ $(".qtycus{{forloop.counter}}").append('<div class="dec{{forloop.counter}} qtybu
                                                 <div class="shipping-calculator-wrap">
                                                     <!-- <a href="#shipping_calculator" class="expand-btn">Calculate Shipping</a> -->
 
-                                                    <form class="cart-form" action="{% url 'shop-checkout' order.kode_nota %}" method="POST">
+                                                    <form class="cart-form" action="{% url 'shop-checkout' order.id %}" method="POST">
                                                         {% csrf_token %}
                                                 </div>
                                             </div>

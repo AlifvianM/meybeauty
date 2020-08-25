@@ -112,7 +112,7 @@
                                         </tfoot>
                                     </table>
                                     {% if orders.status_bayar == 'BELUM' %}
-	                                    <form method="POST" action="{% url 'shop-bayar' orders.pk %}">
+	                                    <form method="POST" action="{% url 'shop-bayar' orders.kode_nota %}">
 	                                    	{% csrf_token %}
 		                                    <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                	
 	                                    </form>

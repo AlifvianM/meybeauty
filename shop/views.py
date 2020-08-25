@@ -388,12 +388,12 @@ def transaction(request):
 	return render(request, 'shop/transaction.html', context)
 
 @login_required
-def OrderBayarUpdate(request, pk):
-	order = get_object_or_404(Order, pk=pk)
+def OrderBayarUpdate(request, kode_nota):
+	order = get_object_or_404(Order, kode_nota=kode_nota)
 	form = OrderBayarForm(request.POST, request.FILES, instance = order)
 	form.kode_nota = order.kode_nota
-	items = OrderItem.objects.filter(order__pk = pk, order__user = request.user)
-	orders = Order.objects.filter(pk = pk, user = request.user)
+	items = OrderItem.objects.filter(order__kode_nota = kode_nota, order__user = request.user)
+	orders = Order.objects.filter(kode_nota = kode_nota, user = request.user)
 	if form.is_valid():
 		form.save()
 		Order.objects.filter(pk = pk).update(status_bayar = 'SUDAH', status_order = True)
@@ -413,7 +413,7 @@ def OrderBayarUpdate(request, pk):
 		    recipient_list = [to_email],
 		    fail_silently = False,
 		)
-		return redirect(reverse('shop-orderdetail', kwargs={'pk':pk}))
+		return redirect(reverse('shop-orderdetail', kwargs={'kode_nota':kode_nota}))
 	context = {
 		'orders':orders,
 		'items':items,
