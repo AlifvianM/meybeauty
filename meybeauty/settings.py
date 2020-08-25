@@ -68,6 +68,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'meybeauty.urls'
 
+
 AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
