@@ -34,13 +34,13 @@ class PembayaranForm(forms.ModelForm):
             
             
 class OrderUpdateForm(forms.ModelForm):
-    # alamat = forms.CharField(
-    #         widget=forms.Textarea(
-    #                 attrs = {
-    #                     'class':'form__input form__input--2'
-    #                 }
-    #             )   
-    #     )
+    alamat = forms.CharField(
+            widget=forms.Textarea(
+                    attrs = {
+                        'class':'form__input form__input--2'
+                    }
+                ), required=True   
+        )
     berat = forms.IntegerField(
             widget=forms.NumberInput(
                     attrs = {
