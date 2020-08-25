@@ -8,10 +8,6 @@
                     <div class="col-12">
                         <div class="d-flex justify-content-between align-items-center flex-sm-row flex-column">
                             <h1 class="page-title">Checkout</h1>
-                            <ul class="breadcrumb">
-                                <li><a href="index.html">Home</a></li>
-                                <li class="current"><span>Checkout</span></li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -27,20 +23,13 @@
                         <!-- Checkout Area Start -->  
                         <div class="col-lg-6">
                             <div class="checkout-title mt--10">
-                                <h2>BUKTI PEMBAYARAN</h2>
+                                <h2>Upload Bukti Pembayaran Anda</h2>
                             </div>
                             <div class="checkout-form">
-                                <!-- <form class="form form--checkout" method="POST" enctype="multipart/form-data">
-                                	{% csrf_token %}
-                                	
-                                	{{form}}
-
-									<button class="btn btn-primary" type="submit">LANJUT</button>
-                                </form> -->
                                 <form method="POST" enctype="multipart/form-data"> 
                                     {% csrf_token %} 
                                     <div class="form-group">
-                                    {{ form.as_p }} 
+                                    {{ form }} 
                                         
                                     </div>
                                     <input class="btn btn-info" type="submit" value="Submit"> 
