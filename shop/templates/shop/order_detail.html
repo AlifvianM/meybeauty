@@ -20,7 +20,7 @@
                         <!-- Checkout Area Start -->  
                         <div class="col-lg-6">
                             <div class="checkout-title mt--10">
-                                <h2>Order Detail</h2>
+                                <h2>Detail Pemesanan Anda</h2>
                             </div>
                             <div class="checkout-form">
                                 <form action="#" class="form form--checkout" method="POST">
@@ -35,13 +35,13 @@
 											<th>Nama</th>
 											<td>{{orders.user.first_name}} {{orders.user.last_name}}</td>
 										</tr>
-										<tr>
-											<th>Status Order</th>
-											<td>{{orders.status_order}}</td>
-										</tr>
                                         <tr>
-                                            <th>Status Bayar</th>
-                                            <td>{{orders.status_bayar}}</td>
+                                            <th>Status Transaksi</th>
+                                            {% if orders.status_bayar == 'BELUM' %}
+                                                <td>Menunggu Pembayaran</td>
+                                                {% else %}
+                                                <td>Telah Dibayar</td>
+                                            {% endif %}
                                         </tr>
 										<tr>
 											<th>Jasa Ongkir</th>
@@ -52,21 +52,23 @@
                                             <td>{{orders.resi}}</td>
                                         </tr>
                                         <tr>
-                                            <tr class="cart-subtotal">
-                                                <th>Keterangan Ongkir</th>
-                                                {% for o in ongkir.values %}
-                                                <td>
-                                                    <ul> 
-                                                        <li>{{orders.alamat}}</li>
-                                                        <li>Kecamatan {{o.destination_details.subdistrict_name}}</li>
-                                                        <li>Kabupaten {{o.destination_details.city}}</li>
-                                                        <li>Provinsi {{o.destination_details.province}}</li>
-                                                    </ul>
-                                                </td>
-                                                
-                                                    
-                                                {% endfor %}
+                                            <th>Alamat</th>
+                                            <td>{{orders.alamat}}</td>
+                                        </tr>
+                                        {% for p in ongkir.values %}
+                                            <tr>
+                                                <th>Kecamatan</th>
+                                                <td>{{p.destination_details.subdistrict_name}}</td>
                                             </tr>
+                                            <tr>
+                                                <th>Kabupaten</th>
+                                                <td>{{p.destination_details.city}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Provinsi</th>
+                                                <td>{{p.destination_details.province}}</td>
+                                            </tr>
+                                        {% endfor %}
                                         </tr>
 									</table>
                                 </form>
@@ -76,7 +78,7 @@
                         <div class="col-xl-5 offset-xl-1 col-lg-6 mt-md--40">
                             <div class="order-details">
                                 <div class="checkout-title mt--10">
-                                    <h2>Your Order</h2>
+                                    <h2>Pemesanan Anda</h2>
                                 </div>
                                 <div class="table-content table-responsive mb--30">
                                     <table class="table order-table order-table-2">

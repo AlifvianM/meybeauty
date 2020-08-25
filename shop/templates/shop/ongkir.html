@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <!-- 
 {% for i in ongkir.values %}	
 	<h5>{{i}}</h5>
@@ -23,7 +25,7 @@
 						<!-- <h4>{{j.costs}}</h4> -->
 						{% for k in j.costs %}
 							{% for l in k.cost %}
-								<option value="{{l.value}}">{{k.service}} ({{l.etd}} Hari) - Harga : Rp.{{l.value}}</option>
+								<option value="{{l.value}}">{{k.service}} ({{l.etd}} Hari) - Harga : Rp.{{l.value|intcomma}}</option>
 							{% endfor %}
 						{% endfor %}
 					{% endfor %}
