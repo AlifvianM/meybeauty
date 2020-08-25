@@ -396,7 +396,7 @@ def OrderBayarUpdate(request, kode_nota):
 	orders = Order.objects.filter(kode_nota = kode_nota, user = request.user)
 	if form.is_valid():
 		form.save()
-		Order.objects.filter(pk = pk).update(status_bayar = 'SUDAH', status_order = True)
+		Order.objects.filter(kode_nota = kode_nota).update(status_bayar = 'SUDAH', status_order = True)
 		orderitem = OrderItem.objects.filter(order__kode_nota = order.kode_nota)
 		user = request.user
 		to_email = user.email
