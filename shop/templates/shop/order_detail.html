@@ -114,14 +114,60 @@
                                         </tfoot>
                                     </table>
                                     {% if orders.status_bayar == 'BELUM' %}
-	                                    <form method="POST" action="{% url 'shop-bayar' orders.kode_nota %}">
-	                                    	{% csrf_token %}
-		                                    <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                	
-	                                    </form>
-                                    {% endif %}
-                                   <div class="payment-info" data-method="bank">
-                                                <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
+	                                    
+
+                                        <div class="payment-info">
+                                                <p>Pembayaran Dapat Dilakukan dengan Bank Dibawah ini</p>
                                             </div>
+
+
+                                   <div class="payment-group mb--10">
+                                            <div class="payment-radio">
+                                                <input type="radio" value="bank" name="payment-method" id="bank">
+                                                <label class="payment-label" for="bank">ATM BANK BRI</label>
+                                            </div>
+                                            <div class="payment-info" data-method="bank">
+                                                <p>Ikuti Tata cara Berikut Untuk Memulai Pembayaran</p>
+                                                <ol>
+                                                    <li><p>Masukan kartu ATM</li>
+                                                    <li><p>Pilih Bahasa Indonesia</p></li>
+                                                    <li><p>Cari Menu Transfer</p></li>
+                                                    <li><p>dan Pilih Transfer ke Bank lain. Jika anda pengguna bank yang sama, maka anda tinggal memilih kesesama BRI.</p></li>
+                                                    <li><p>Masukan kode bank BRI dilanjutkan dengan nomor rekening tujuan <b>0007-01-001109-5-68</b>  a.n <b>Putri Ruri Mei Shinta.</b> Jika anda sesama bank BRI, anda langsung mengisi nomor rekening tujuan. </p></li>
+                                                    <li><p>Masukan nominal yang nominal pembayaran anda</p></li>
+                                                    <li><p>Konfirmasi ulang transfer, jika benar (pilih Benar)</p></li>
+                                                    <li><p>Jangan Lupa untuk menyimpan bukti dan memfoto transfer </p></li>
+                                                </ol>
+                                            </div>
+                                        </div>
+
+                                    <div class="payment-group mb--10">
+                                            <div class="payment-radio">
+                                                <input type="radio" value="bank" name="payment-method" id="bank">
+                                                <label class="payment-label" for="bank">BRI MOBILE BANKING</label>
+                                            </div>
+                                            <div class="payment-info" data-method="bank">
+                                                <p>Ikuti Tata cara Berikut Untuk Memulai Pembayaran</p>
+                                                <ol>
+                                                    <li><p>Buka aplikasi BRI mobile di smartphone</li>
+                                                    <li><p> Pilih menu "Mobile Banking BRI"</p></li>
+                                                    <li><p>Cari Menu Transfer</p></li>
+                                                    <li><p>Klik "BANK LAIN". Jika Anda sesama pengguna bank BRI, klik "SESAMA BRI" dan lanjutkan ke langkah 6.</p></li>
+                                                    <li><p>Pilih kode bank yang akan ditranfer</b> </p></li>
+                                                    <li><p>Masukkan No. Tujuan Rekening <b>0007-01-001109-5-68</b> a.n <b>Putri Ruri Mei Shinta.</b> </p></li>
+                                                    <li><p>Masukkan jumlah uang yang akan ditranfer sesuai dengan nominal pembayaran anda</p></li>
+                                                    <li><p>Masukkan PIN mobile BRI atau PIN ATM</p></li>
+                                                    <li><p>Klik "Ok"</p></li>
+                                                    <li><p>Jangan lupa untuk menscreenshot bukti pembayaran anda.</p></li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <form method="POST" action="{% url 'shop-bayar' orders.kode_nota %}">
+                                            {% csrf_token %}
+                                            <button class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2" type="submit">Proceed Checkout</button>                                    
+                                        </form>
+                                    {% endif %}
+
                                 </div>
                                 
                             </div>

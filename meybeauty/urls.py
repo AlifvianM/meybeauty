@@ -21,10 +21,12 @@ from django.conf.urls.static import static
 from users import views as users_views
 from users.forms import MyLoginView
 from django.contrib.auth import views as auth_views
+from django.views.static import serve 
 
 
 
 urlpatterns = [
+    path('summernote/', include('django_summernote.urls')),
 	path('', include('shop.urls')),
     re_path(r'^accounts/',include('allauth.urls')),
     path('adminpage/', include('adminpage.urls')),
@@ -39,6 +41,9 @@ urlpatterns = [
     path('register/success/', users_views.register_success, name = 'register_success'),
     path('login/', users_views.login_view, name= 'login'),
     path('logout/', auth_views.LogoutView.as_view(template_name = 'users/login-register.html'), name='logout'),
+
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:

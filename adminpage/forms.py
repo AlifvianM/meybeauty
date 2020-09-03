@@ -1,5 +1,7 @@
 from django import forms
 from shop.models import Order, Product, Member
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
+
 
 
 class OrderForm(forms.ModelForm):
@@ -52,13 +54,7 @@ class ProductForm(forms.ModelForm):
 					}
 				)
 		)
-	desc = forms.CharField(
-			widget=forms.Textarea(
-					attrs = {
-						'class':'form-control',
-					}
-				)
-		)
+	desc = forms.CharField(widget=SummernoteWidget())
 	berat = forms.CharField(
 			widget=forms.NumberInput(
 					attrs = {

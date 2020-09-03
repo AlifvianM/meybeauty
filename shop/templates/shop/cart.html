@@ -1,5 +1,5 @@
 {% extends "shop/index.html" %}
-
+{% load humanize %}
 {% block content %}
 
     
@@ -41,7 +41,7 @@
                                                         </td>
                                                         <td class="product-price">
                                                             <span class="product-price-wrapper">
-                                                                <span class="money">Rp.{{item.price}}</span>
+                                                                <span class="money">Rp.{{item.price|intcomma}}</span>
                                                             </span>
                                                         </td>
                                                         <td class="product-quantity">

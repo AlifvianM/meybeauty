@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(sd5b)70^k^^tra^2xpqku@^)b0m+snt%$_p(u^sm-4bb0($p_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '*']
 
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'users',
     'api',
     'shop',
+
+    'django_summernote',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -211,6 +213,6 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 
