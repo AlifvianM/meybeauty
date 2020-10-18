@@ -11,8 +11,10 @@ from datetime import date
 from django.template.loader import render_to_string
 from django.views.generic import ListView,DetailView
 from django.conf import settings
-from django_weasyprint import WeasyTemplateResponseMixin
-from django_weasyprint.views import CONTENT_TYPE_PNG
+
+# from django_weasyprint import WeasyTemplateResponseMixin
+# from django_weasyprint.views import CONTENT_TYPE_PNG
+
 import io
 from django.http import FileResponse, HttpResponse
 from reportlab.pdfgen import canvas
@@ -93,9 +95,9 @@ class OrderListView(ListView):
 		
 		return context
 
-class MyModelDownloadView(WeasyTemplateResponseMixin, OrderListView):
-	pdf_attachment = False
-	pdf_filename = 'list.html'
+# class MyModelDownloadView(WeasyTemplateResponseMixin, OrderListView):
+# 	pdf_attachment = False
+# 	pdf_filename = 'list.html'
 
 
 def add_product(request):

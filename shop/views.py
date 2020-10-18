@@ -179,7 +179,7 @@ def add_to_cart(request,pk):
 	orderitem,created = OrderItem.objects.get_or_create(product=product,order=cart, price=product.harga, total_weight=product.berat)
 	total = OrderItem.objects.filter(order__status_order = False).aggregate(Sum('price'))['price__sum'] or 0.00
 	if created:
-		kode = 'INV'+now.strftime('%Y')+now.strftime('%m')+now.strftime('%d')+str(orderitem.order.pk)
+		kode = 'INV'+str(orderitem.order.pk)
 		orderitem.order.kode_nota = kode
 		orderitem.order.harga = total
 		orderitem.save()

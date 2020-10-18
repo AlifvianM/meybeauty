@@ -25,7 +25,7 @@ SECRET_KEY = '(sd5b)70^k^^tra^2xpqku@^)b0m+snt%$_p(u^sm-4bb0($p_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '*']
+ALLOWED_HOSTS = ['127.0.0.1','localhost', 'drwskincare-banyuwangi.com', 'www.drwskincare-banyuwangi.com']
 
 
 # Application definition
@@ -45,11 +45,11 @@ INSTALLED_APPS = [
     'api',
     'shop',
 
+    # 'rest_framework',
+    # 'rest_framework.authtoken',
+    # 'rest_framework_api_key',
     'django_summernote',
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_api_key',
 
     'allauth',
     'allauth.account',
@@ -69,7 +69,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'meybeauty.urls'
-
 
 AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -106,17 +105,18 @@ WSGI_APPLICATION = 'meybeauty.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
 DATABASES = {
 
     'default': {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'drw',
+        'NAME': 'drwskin5_banyuwangi1',
 
-        'USER': 'admin',
+        'USER': 'drwskin5_banyuwangi',
 
-        'PASSWORD': 'admin',
+        'PASSWORD': 'drwskincarebanyuwangi',
 
         'HOST': 'localhost',
 
@@ -144,21 +144,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Jakarta'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -177,16 +178,6 @@ LOGOUT_REDIRECT_URL = 'register'
 
 API_KEY_SECRET = '87883971c234e56bc2490bbf39e4837e'
 
-# # Static files (CSS, JavaScript, Images)
-# # https://docs.djangoproject.com/en/3.0/howto/static-files/
-# STATIC_URL = '/static/'
-# MEDIA_URL = '/media/'
-# # STATICFILES_DIRS = [BASE_DIR+'/assets/']
-# STATIC_ROOT = '/Users/alifvianmarco/Documents/project/drwecommerce/meybeautybackup/static/shop/assets'
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# MEDIA_ROOT='/Users/alifvianmarco/Documents/project/drwecommerce/meybeautybackup/media/'
-
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
@@ -194,12 +185,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.drwskincare-banyuwangi.com'
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'drwbanyuwangi@gmail.com'
+EMAIL_HOST_PASSWORD = 'glfyjfypzpwjlatm'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'customerservice@drwskincare-banyuwangi.com'
-EMAIL_HOST_PASSWORD = 'drwbanyuwangi'
+EMAIL_USE_TLS = True
 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -213,6 +205,5 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-

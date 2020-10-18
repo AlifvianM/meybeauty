@@ -2,8 +2,6 @@ from django import forms
 from shop.models import Order, Product, Member
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
-
-
 class OrderForm(forms.ModelForm):
 	# status_order = forms.BooleanField(
 	# 		widget=forms.CheckboxInput(

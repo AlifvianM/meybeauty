@@ -3,7 +3,7 @@ from .views import (
 	index, 
 	updateresi,
 	add_product,
-	MyModelDownloadView,
+	# MyModelDownloadView,
 	list_product,
 	order_detail,
 	list_reseller,
@@ -20,7 +20,7 @@ urlpatterns = [
 	path('delete/product/<int:pk>/', delete_product, name='adminpage-delete_product'),
 	path('listproduct', list_product, name='adminpage-list_product'),
 	path('product/tambah', add_product, name='adminpage-product'),
-	path('pdf',MyModelDownloadView.as_view(), name = 'pdf'),
+	# path('pdf',MyModelDownloadView.as_view(), name = 'pdf'),
 	path('tambahresi/<str:kode_nota>', updateresi, name='adminpage-resi'),
 	path('', index, name='adminpage-index'),
 ]

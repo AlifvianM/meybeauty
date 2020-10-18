@@ -10,7 +10,6 @@ dj-database-url==0.5.0
 Django==3.0.6
 django-allauth==0.42.0
 django-ckeditor==3.6.2.1
-django-heroku==0.3.1
 django-weasyprint==1.0.1
 djangorestframework==3.11.0
 djangorestframework-api-key==2.0.0
@@ -20,7 +19,6 @@ idna==2.9
 midtransclient==1.1.1
 oauthlib==3.1.0
 Pillow==7.1.2
-psycopg2==2.8.5
 pycparser==2.20
 Pyphen==0.9.5
 python3-openid==3.2.0
